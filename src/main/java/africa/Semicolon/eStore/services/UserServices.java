@@ -14,4 +14,5 @@ public interface UserServices {
     LoginResponse login(LoginRequest loginRequest);
     LogoutResponse logout(LogoutRequest logOutRequest);
     AddProductResponse addProduct(AddProductRequest addProductRequest);
+    AddItemResponse addToCart(AddItemRequest addItemRequest);
 }

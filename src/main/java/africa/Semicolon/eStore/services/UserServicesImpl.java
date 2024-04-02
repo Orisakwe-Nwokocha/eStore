@@ -59,6 +59,11 @@ public class UserServicesImpl implements UserServices {
         return inventoryServices.addProductWith(addProductRequest);
     }
 
+    @Override
+    public AddItemResponse addToCart(AddItemRequest addItemRequest) {
+        return null;
+    }
+
     private void validate(User user) {
         boolean isAdmin = user.getRole().equals(ADMIN);
         if (!isAdmin) throw new InvalidArgumentException("User is not a valid admin");

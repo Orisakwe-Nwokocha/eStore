@@ -19,4 +19,11 @@ public final class Product {
     private ProductCategory category;
     @NotNull(message = "Quantity cannot be null")
     private int quantity;
+
+    @Override
+    public String toString() {
+        String asterisk = "*".repeat(15);
+        String format = "%s%n%s%n%s%n%s%n%s%n₦%,.2f%n%s";
+        return String.format(format, asterisk, id, name, description, category, price, asterisk);
+    }
 }

@@ -6,13 +6,11 @@ import africa.Semicolon.eStore.data.models.Role;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
-import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
-import africa.Semicolon.eStore.dtos.responses.LoginResponse;
-import africa.Semicolon.eStore.dtos.responses.LogoutResponse;
-import africa.Semicolon.eStore.dtos.responses.RegisterResponse;
+import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cleaner.upperCaseValueOf;
@@ -87,5 +85,15 @@ public final class Mapper {
         return addProductResponse;
     }
 
+    public static GetProductsResponse mapGetProductsResponse(List<Product> allProducts) {
+        GetProductsResponse getProductsResponse = new GetProductsResponse();
+        getProductsResponse.setProducts(allProducts.toString());
+        return getProductsResponse;
+    }
 
+    public static FindProductResponse mapFindProductResponse(Product foundProduct) {
+        FindProductResponse findProductResponse = new FindProductResponse();
+        findProductResponse.setProduct(foundProduct.getDescription());
+        return findProductResponse;
+    }
 }
