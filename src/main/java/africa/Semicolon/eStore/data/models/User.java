@@ -16,7 +16,6 @@ public class User {
     private String name;
     private String emailAddress;
     private String phoneNumber;
-    @NotNull(message = "Please enter your address")
     private Address homeAddress;
     @NotNull(message = "Please enter a username")
     private String username;

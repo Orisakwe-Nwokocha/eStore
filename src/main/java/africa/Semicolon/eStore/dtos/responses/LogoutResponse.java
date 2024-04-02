@@ -1,9 +1,9 @@
-package africa.semicolon.aprokoBlog.dtos.responses;
+package africa.Semicolon.eStore.dtos.responses;
 
 import lombok.Data;
 
 @Data
-public class LogoutUserResponse {
+public class LogoutResponse {
     private String id;
     private String username;
     private boolean isLoggedIn;

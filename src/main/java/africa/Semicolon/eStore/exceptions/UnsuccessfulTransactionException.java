@@ -1,6 +1,6 @@
-package oopEstore.exceptions;
+package africa.Semicolon.eStore.exceptions;
 
-public class UnsuccessfulTransactionException extends RuntimeException {
+public class UnsuccessfulTransactionException extends EstoreAppException {
     public UnsuccessfulTransactionException(String message) {
         super(message);
     }
