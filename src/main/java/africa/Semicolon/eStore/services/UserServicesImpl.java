@@ -2,18 +2,19 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.data.repositories.Users;
+import africa.Semicolon.eStore.dtos.requests.LoginRequest;
+import africa.Semicolon.eStore.dtos.requests.LogoutRequest;
 import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
+import africa.Semicolon.eStore.dtos.responses.LoginResponse;
+import africa.Semicolon.eStore.dtos.responses.LogoutResponse;
 import africa.Semicolon.eStore.dtos.responses.RegisterResponse;
-import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
-import africa.Semicolon.eStore.exceptions.UserExistsException;
-import africa.Semicolon.eStore.exceptions.UserNotFoundException;
+import africa.Semicolon.eStore.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
-import static africa.Semicolon.eStore.utils.Cryptography.encode;
-import static africa.Semicolon.eStore.utils.Mapper.map;
-import static africa.Semicolon.eStore.utils.Mapper.mapRegisterResponseWith;
+import static africa.Semicolon.eStore.utils.Cryptography.isMatches;
+import static africa.Semicolon.eStore.utils.Mapper.*;
 
 @Service
 public final class UserServicesImpl implements UserServices {
@@ -26,6 +27,27 @@ public final class UserServicesImpl implements UserServices {
         User newUser = map(registerRequest);
         User savedUser = users.save(newUser);
         return mapRegisterResponseWith(savedUser);
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        User foundUser = findUserBy(loginRequest.getUsername());
+        if (!isMatches(loginRequest, foundUser)) throw new IncorrectPasswordException("Password is not correct");
+        foundUser.setLoggedIn(true);
+        User savedUser = users.save(foundUser);
+        return mapLoginResponseWith(savedUser);
+    }
+
+    @Override
+    public LogoutResponse logout(LogoutRequest logOutRequest) {
+        User foundUser = findUserBy(logOutRequest.getUsername());
+        foundUser.setLoggedIn(false);
+        User savedUser = users.save(foundUser);
+        return mapLogoutResponseWith(savedUser);
+    }
+
+    private void validateLoginStatusOf(User user) {
+        if (!user.isLoggedIn()) throw new IllegalUserStateException("User is not logged in");
     }
 
     private User findUserBy(String username) {
@@ -42,7 +64,9 @@ public final class UserServicesImpl implements UserServices {
     }
 
     private static void validateBlank(RegisterRequest registerRequest) {
-        boolean isBlank = registerRequest.getUsername().isBlank() || registerRequest.getPassword().isBlank();
+        boolean isBlank = registerRequest.getUsername().isBlank()
+                || registerRequest.getPassword().isBlank()
+                || registerRequest.getRole().isBlank();
         if (isBlank) throw new InvalidArgumentException("Registration details cannot be blank");
     }
 

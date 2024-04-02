@@ -23,6 +23,7 @@ public class User {
     private String password;
     @NotNull(message = "Please select a role")
     private Role role;
+    private boolean isLoggedIn = true;
     private ShoppingCart cart;
     private List<Order> orders = new ArrayList<>();
 }
