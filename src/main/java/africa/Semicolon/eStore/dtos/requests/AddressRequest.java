@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class AddressRequest {
+public final class AddressRequest {
     @NotNull(message = "address is mandatory")
     private String cityName;
     @NotNull(message = "address is mandatory")

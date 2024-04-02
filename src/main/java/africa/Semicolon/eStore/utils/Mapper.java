@@ -1,11 +1,16 @@
 package africa.Semicolon.eStore.utils;
 
+import africa.Semicolon.eStore.data.models.Product;
+import africa.Semicolon.eStore.data.models.ProductCategory;
 import africa.Semicolon.eStore.data.models.Role;
 import africa.Semicolon.eStore.data.models.User;
+import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
+import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
 import africa.Semicolon.eStore.dtos.responses.LoginResponse;
 import africa.Semicolon.eStore.dtos.responses.LogoutResponse;
 import africa.Semicolon.eStore.dtos.responses.RegisterResponse;
+import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 
 import java.time.format.DateTimeFormatter;
 
@@ -19,9 +24,14 @@ public final class Mapper {
         String password = encode(registerRequest.getPassword());
         String role = upperCaseValueOf(registerRequest.getRole());
         User user = new User();
+        try {
+            user.setRole(Role.valueOf(role));
+        }
+        catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException("Invalid role: " + role);
+        }
         user.setUsername(username);
         user.setPassword(password);
-        user.setRole(Role.valueOf(role));
         user.setName(registerRequest.getName());
         user.setEmailAddress(registerRequest.getEmailAddress());
         user.setPhoneNumber(registerRequest.getPhoneNumber());
@@ -48,6 +58,33 @@ public final class Mapper {
         logoutResponse.setUsername(user.getUsername());
         logoutResponse.setLoggedIn(false);
         return logoutResponse;
+    }
+
+    public static Product map(AddProductRequest addProductRequest) {
+        String productCategory = upperCaseValueOf(addProductRequest.getCategory());
+        Product product = new Product();
+        try {
+            product.setCategory(ProductCategory.valueOf(productCategory));
+        }
+        catch (IllegalArgumentException e) {
+            throw new InvalidArgumentException("Category is not valid");
+        }
+        product.setName(addProductRequest.getName());
+        product.setDescription(addProductRequest.getDescription());
+        product.setPrice(addProductRequest.getPrice());
+        product.setQuantity(addProductRequest.getQuantity());
+        return product;
+    }
+
+    public static AddProductResponse mapAddProductResponseWith(Product product) {
+        AddProductResponse addProductResponse = new AddProductResponse();
+        addProductResponse.setProductId(product.getId());
+        addProductResponse.setProductName(product.getName());
+        addProductResponse.setCategory(product.getCategory().toString());
+        addProductResponse.setPrice(product.getPrice());
+        addProductResponse.setQuantity(product.getQuantity());
+        addProductResponse.setDescription(product.getDescription());
+        return addProductResponse;
     }
 
 

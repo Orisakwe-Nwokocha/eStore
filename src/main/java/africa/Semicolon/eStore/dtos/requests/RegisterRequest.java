@@ -1,6 +1,5 @@
 package africa.Semicolon.eStore.dtos.requests;
 
-import africa.Semicolon.eStore.data.models.Address;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

@@ -1,10 +1,13 @@
 package africa.Semicolon.eStore.services;
 
+import africa.Semicolon.eStore.data.models.Role;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.data.repositories.Users;
+import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.LoginRequest;
 import africa.Semicolon.eStore.dtos.requests.LogoutRequest;
 import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
+import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
 import africa.Semicolon.eStore.dtos.responses.LoginResponse;
 import africa.Semicolon.eStore.dtos.responses.LogoutResponse;
 import africa.Semicolon.eStore.dtos.responses.RegisterResponse;
@@ -12,14 +15,17 @@ import africa.Semicolon.eStore.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static africa.Semicolon.eStore.data.models.Role.ADMIN;
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cryptography.isMatches;
 import static africa.Semicolon.eStore.utils.Mapper.*;
 
 @Service
-public final class UserServicesImpl implements UserServices {
+public class UserServicesImpl implements UserServices {
     @Autowired
     private Users users;
+    @Autowired
+    private InventoryServices inventoryServices;
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -44,6 +50,18 @@ public final class UserServicesImpl implements UserServices {
         foundUser.setLoggedIn(false);
         User savedUser = users.save(foundUser);
         return mapLogoutResponseWith(savedUser);
+    }
+
+    @Override
+    public AddProductResponse addProduct(AddProductRequest addProductRequest) {
+        User foundUser = findUserBy(addProductRequest.getUsername());
+        validate(foundUser);
+        return inventoryServices.addProductWith(addProductRequest);
+    }
+
+    private void validate(User user) {
+        boolean isAdmin = user.getRole().equals(ADMIN);
+        if (!isAdmin) throw new InvalidArgumentException("User is not a valid admin");
     }
 
     private void validateLoginStatusOf(User user) {
