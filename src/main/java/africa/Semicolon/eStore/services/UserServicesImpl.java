@@ -6,7 +6,6 @@ import africa.Semicolon.eStore.data.repositories.Users;
 import africa.Semicolon.eStore.dtos.requests.*;
 import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.*;
-import africa.Semicolon.eStore.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +51,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public AddProductResponse addProduct(AddProductRequest addProductRequest) {
         User foundUser = findUserBy(addProductRequest.getUsername());
+        validateLoginStatusOf(foundUser);
         validate(foundUser);
         return inventoryServices.addProductWith(addProductRequest);
     }
@@ -59,6 +59,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public AddItemResponse addToCart(AddItemRequest addItemRequest) {
         User foundUser = findUserBy(addItemRequest.getUsername());
+        validateLoginStatusOf(foundUser);
         ShoppingCart shoppingCart = shoppingCartServices.addToCartWith(addItemRequest, foundUser);
         foundUser.setCart(shoppingCart);
         User savedUser = users.save(foundUser);
@@ -66,9 +67,10 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public RemoveItemResponse addToCart(RemoveItemRequest removeItemRequest) {
+    public RemoveItemResponse removeFromCart(RemoveItemRequest removeItemRequest) {
         User foundUser = findUserBy(removeItemRequest.getUsername());
-        ShoppingCart shoppingCart = shoppingCartServices.removeFromCart(removeItemRequest, foundUser);
+        validateLoginStatusOf(foundUser);
+        ShoppingCart shoppingCart = shoppingCartServices.removeFromCartWith(removeItemRequest, foundUser);
         foundUser.setCart(shoppingCart);
         User savedUser = users.save(foundUser);
         return mapRemoveItemResponse(savedUser);
@@ -77,13 +79,14 @@ public class UserServicesImpl implements UserServices {
     @Override
     public ViewCartResponse viewCart(ViewCartRequest viewCartRequest) {
         User foundUser = findUserBy(viewCartRequest.getUsername());
+        validateLoginStatusOf(foundUser);
         if (foundUser.getCart().getItems().isEmpty()) throw new ShoppingCartIsEmptyException("Your cart is empty");
         return mapViewCartResponse(foundUser);
     }
 
     private void validate(User user) {
         boolean isAdmin = user.getRole().equals(ADMIN);
-        if (!isAdmin) throw new InvalidArgumentException("User is not a valid admin");
+        if (!isAdmin) throw new InvalidUserRoleException("User is not a valid admin");
     }
 
     private void validateLoginStatusOf(User user) {
@@ -93,7 +96,7 @@ public class UserServicesImpl implements UserServices {
     private User findUserBy(String username) {
         username = lowerCaseValueOf(username);
         User foundUser = users.findByUsername(username);
-        if (foundUser == null) throw new UserNotFoundException(String.format("User with '%s' username not found", username));
+        if (foundUser == null) throw new UserNotFoundException(String.format("User with '%s' not found", username));
         return foundUser;
     }
 

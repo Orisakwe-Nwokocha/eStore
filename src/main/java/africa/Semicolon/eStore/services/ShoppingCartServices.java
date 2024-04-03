@@ -7,5 +7,5 @@ import africa.Semicolon.eStore.dtos.requests.RemoveItemRequest;
 
 public interface ShoppingCartServices {
     ShoppingCart addToCartWith(AddItemRequest addItemRequest, User user);
-    ShoppingCart removeFromCart(RemoveItemRequest removeItemRequest, User user);
+    ShoppingCart removeFromCartWith(RemoveItemRequest removeItemRequest, User user);
 }

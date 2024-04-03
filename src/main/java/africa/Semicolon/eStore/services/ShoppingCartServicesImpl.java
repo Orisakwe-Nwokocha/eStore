@@ -27,7 +27,7 @@ public class ShoppingCartServicesImpl implements ShoppingCartServices {
     }
 
     @Override
-    public ShoppingCart removeFromCart(RemoveItemRequest removeItemRequest, User user) {
+    public ShoppingCart removeFromCartWith(RemoveItemRequest removeItemRequest, User user) {
         Product product = inventoryServices.findBy(removeItemRequest.getProductId());
         ShoppingCart shoppingCart = user.getCart();
         Item foundItem = findItemBy(product, shoppingCart);
