@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public final class AddProductRequest {
+    @NotNull(message = "Username cannot be null")
     private String username;
     @NotNull(message = "Product name cannot be null")
     private String name;

@@ -1,10 +1,12 @@
 package africa.Semicolon.eStore.services;
 
+import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.data.repositories.Users;
 import africa.Semicolon.eStore.dtos.requests.*;
 import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.*;
+import africa.Semicolon.eStore.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ public class UserServicesImpl implements UserServices {
     @Autowired
     private InventoryServices inventoryServices;
     @Autowired
-    private ShoppingCartService shoppingCartService;
+    private ShoppingCartServices shoppingCartServices;
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -57,7 +59,26 @@ public class UserServicesImpl implements UserServices {
     @Override
     public AddItemResponse addToCart(AddItemRequest addItemRequest) {
         User foundUser = findUserBy(addItemRequest.getUsername());
-        return null;
+        ShoppingCart shoppingCart = shoppingCartServices.addToCartWith(addItemRequest, foundUser);
+        foundUser.setCart(shoppingCart);
+        User savedUser = users.save(foundUser);
+        return mapAddItemResponse(savedUser);
+    }
+
+    @Override
+    public RemoveItemResponse addToCart(RemoveItemRequest removeItemRequest) {
+        User foundUser = findUserBy(removeItemRequest.getUsername());
+        ShoppingCart shoppingCart = shoppingCartServices.removeFromCart(removeItemRequest, foundUser);
+        foundUser.setCart(shoppingCart);
+        User savedUser = users.save(foundUser);
+        return mapRemoveItemResponse(savedUser);
+    }
+
+    @Override
+    public ViewCartResponse viewCart(ViewCartRequest viewCartRequest) {
+        User foundUser = findUserBy(viewCartRequest.getUsername());
+        if (foundUser.getCart().getItems().isEmpty()) throw new ShoppingCartIsEmptyException("Your cart is empty");
+        return mapViewCartResponse(foundUser);
     }
 
     private void validate(User user) {

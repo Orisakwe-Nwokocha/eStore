@@ -9,4 +9,6 @@ public interface UserServices {
     LogoutResponse logout(LogoutRequest logOutRequest);
     AddProductResponse addProduct(AddProductRequest addProductRequest);
     AddItemResponse addToCart(AddItemRequest addItemRequest);
+    RemoveItemResponse addToCart(RemoveItemRequest removeItemRequest);
+    ViewCartResponse viewCart(ViewCartRequest viewCartRequest);
 }

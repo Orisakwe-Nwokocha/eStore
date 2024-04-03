@@ -9,7 +9,6 @@ import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
 import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
@@ -58,7 +57,7 @@ public final class Mapper {
         return logoutResponse;
     }
 
-    public static Product map(AddProductRequest addProductRequest) {
+    public static Product mapAddItemResponse(AddProductRequest addProductRequest) {
         String productCategory = upperCaseValueOf(addProductRequest.getCategory());
         Product product = new Product();
         try {
@@ -95,5 +94,26 @@ public final class Mapper {
         FindProductResponse findProductResponse = new FindProductResponse();
         findProductResponse.setProduct(foundProduct.getDescription());
         return findProductResponse;
+    }
+
+    public static AddItemResponse mapAddItemResponse(User user) {
+        AddItemResponse addItemResponse = new AddItemResponse();
+        addItemResponse.setUsername(user.getUsername());
+        addItemResponse.setShoppingCart(user.getCart().toString());
+        return addItemResponse;
+    }
+
+    public static RemoveItemResponse mapRemoveItemResponse(User user) {
+        RemoveItemResponse removeItemResponse = new RemoveItemResponse();
+        removeItemResponse.setUsername(user.getUsername());
+        removeItemResponse.setShoppingCart(user.getCart().toString());
+        return removeItemResponse;
+    }
+
+    public static ViewCartResponse mapViewCartResponse(User user) {
+        ViewCartResponse viewCartResponse = new ViewCartResponse();
+        viewCartResponse.setUsername(user.getUsername());
+        viewCartResponse.setShoppingCart(user.getCart().toString());
+        return viewCartResponse;
     }
 }

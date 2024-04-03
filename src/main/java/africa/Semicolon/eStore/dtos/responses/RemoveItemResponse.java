@@ -1,10 +1,9 @@
 package africa.Semicolon.eStore.dtos.responses;
 
-import africa.Semicolon.eStore.data.models.ShoppingCart;
 import lombok.Data;
 
 @Data
-public final class AddItemResponse {
+public final class RemoveItemResponse {
     private String username;
     private String shoppingCart;
 }

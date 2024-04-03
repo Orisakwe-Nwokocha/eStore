@@ -6,4 +6,9 @@ import lombok.Data;
 public final class Item {
     private Product product;
     private int quantityOfProduct;
+
+    @Override
+    public String toString() {
+        return String.format("Product:%n%s%nQuantity: %d", product, quantityOfProduct);
+    }
 }

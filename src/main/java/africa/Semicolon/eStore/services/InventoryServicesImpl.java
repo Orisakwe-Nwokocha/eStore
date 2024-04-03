@@ -25,7 +25,7 @@ public class InventoryServicesImpl implements InventoryServices {
 
     @Override
     public AddProductResponse addProductWith(AddProductRequest addProductRequest) {
-        Product newProduct = map(addProductRequest);
+        Product newProduct = mapAddItemResponse(addProductRequest);
         inventory.save(newProduct);
         return mapAddProductResponseWith(newProduct);
     }

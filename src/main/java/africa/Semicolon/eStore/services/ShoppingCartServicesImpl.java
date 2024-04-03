@@ -5,15 +5,14 @@ import africa.Semicolon.eStore.data.models.Product;
 import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.dtos.requests.AddItemRequest;
+import africa.Semicolon.eStore.dtos.requests.RemoveItemRequest;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 import africa.Semicolon.eStore.exceptions.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ShoppingCartServiceImpl implements ShoppingCartService {
+public class ShoppingCartServicesImpl implements ShoppingCartServices {
     @Autowired
     private InventoryServices inventoryServices;
 
@@ -22,13 +21,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Product product = inventoryServices.findBy(addItemRequest.getProductId());
         validate(addItemRequest.getQuantityOfProduct());
         ShoppingCart shoppingCart = user.getCart();
-        if (isPresent(product, shoppingCart)) update(product, addItemRequest.getQuantityOfProduct(), shoppingCart);
-        else addNew(addItemRequest)
-        return null;
-    }
-
-    private void validate(int quantityOfProduct) {
-        if (quantityOfProduct <= 0) throw new InvalidArgumentException("Quantity of product must be positive");
+        if (isPresent(product, shoppingCart)) updateQuantityOf(product, addItemRequest.getQuantityOfProduct(), shoppingCart);
+        else addNewItemWith(addItemRequest, shoppingCart);
+        return shoppingCart;
     }
 
     @Override
@@ -40,19 +35,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCart;
     }
 
-
-    @Override
-    public List<Item> viewCart(User user) {
-        return null;
-    }
-
-    private void addNew(AddItemRequest addItemRequest, ShoppingCart shoppingCart) {
+    private void addNewItemWith(AddItemRequest addItemRequest, ShoppingCart shoppingCart) {
         Product product = inventoryServices.findBy(addItemRequest.getProductId());
-        Item newItem = new Item(product, addItemRequest.getQuantityOfProduct());
+        Item newItem = new Item();
+        newItem.setProduct(product);
+        newItem.setQuantityOfProduct(addItemRequest.getQuantityOfProduct());
         shoppingCart.getItems().add(newItem);
     }
 
-    private void update(Product product, int quantityOfProduct, ShoppingCart shoppingCart) {
+    private void updateQuantityOf(Product product, int quantityOfProduct, ShoppingCart shoppingCart) {
         Item foundItem = findItemBy(product, shoppingCart);
         foundItem.setQuantityOfProduct(quantityOfProduct);
     }
@@ -65,5 +56,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private boolean isPresent(Product product, ShoppingCart cart) {
         for (Item item : cart.getItems()) if (item.getProduct().equals(product)) return true;
         return false;
+    }
+
+    private void validate(int quantityOfProduct) {
+        if (quantityOfProduct <= 0) throw new InvalidArgumentException("Quantity of product must be positive");
     }
 }
