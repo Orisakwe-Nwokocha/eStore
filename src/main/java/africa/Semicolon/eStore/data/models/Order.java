@@ -2,9 +2,10 @@ package africa.Semicolon.eStore.data.models;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
@@ -12,38 +13,18 @@ import java.time.format.DateTimeFormatter;
 public final class Order {
     @Id
     private String id;
-    private final int numberOfItems;
-    private final String items;
-    private final double totalPrice;
-    private final String orderDate;
-    private static int count = 0;
-
-    public Order(ShoppingCart cart, double totalPrice) {
-        orderID = ++count;
-        numberOfItems = cart.view().size();
-        items = getItems(cart);
-        this.totalPrice = totalPrice;
-        orderDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"));
-    }
-
-    private static String getItems(ShoppingCart cart) {
-        StringBuilder items = new StringBuilder();
-
-        String asterisks = "*".repeat(17);
-
-        items.append("\n").append(asterisks).append("\n");
-        for (Item item : cart.view()) items.append(item).append("\n").append(asterisks).append("\n");
-
-        return items.toString();
-    }
+    @DBRef
+    private User buyer;
+    private int numberOfItems;
+    private String items;
+    private double totalPrice;
+    private LocalDateTime orderDate = LocalDateTime.now();
 
     @Override
     public String toString() {
-        return String.format("""
-                Order Id: %d
-                Number of items: %s
-                Items: %sTotal Price: ₦%,.2f
-                Order Date: %s
-                """, orderID, numberOfItems, items, totalPrice, orderDate);
+        String asterisk = "*".repeat(15);
+        String dateOfOrder = orderDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' HH:mm:ss a"));
+        String format = "%s%nOrder Id: %s%nNumber of items: %s%nItems: %sTotal Price: ₦%,.2f %nOrder Date: %s%n%s";
+        return String.format(format, asterisk, id, numberOfItems, items, totalPrice, dateOfOrder, asterisk);
     }
 }

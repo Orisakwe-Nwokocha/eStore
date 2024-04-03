@@ -1,16 +1,9 @@
 package africa.Semicolon.eStore.services;
 
-import africa.Semicolon.eStore.data.models.Role;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.data.repositories.Users;
-import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
-import africa.Semicolon.eStore.dtos.requests.LoginRequest;
-import africa.Semicolon.eStore.dtos.requests.LogoutRequest;
-import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
-import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
-import africa.Semicolon.eStore.dtos.responses.LoginResponse;
-import africa.Semicolon.eStore.dtos.responses.LogoutResponse;
-import africa.Semicolon.eStore.dtos.responses.RegisterResponse;
+import africa.Semicolon.eStore.dtos.requests.*;
+import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +19,8 @@ public class UserServicesImpl implements UserServices {
     private Users users;
     @Autowired
     private InventoryServices inventoryServices;
+    @Autowired
+    private ShoppingCartService shoppingCartService;
 
     @Override
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -61,6 +56,7 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public AddItemResponse addToCart(AddItemRequest addItemRequest) {
+        User foundUser = findUserBy(addItemRequest.getUsername());
         return null;
     }
 

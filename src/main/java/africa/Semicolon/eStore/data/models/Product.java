@@ -26,4 +26,10 @@ public final class Product {
         String format = "%s%n%s%n%s%n%s%n%s%n₦%,.2f%n%s";
         return String.format(format, asterisk, id, name, description, category, price, asterisk);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        return (obj instanceof Product product) && this.id.equals(product.id);
+    }
 }

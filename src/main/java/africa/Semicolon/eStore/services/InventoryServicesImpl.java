@@ -8,7 +8,6 @@ import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
 import africa.Semicolon.eStore.dtos.responses.FindProductResponse;
 import africa.Semicolon.eStore.dtos.responses.GetProductsResponse;
 import africa.Semicolon.eStore.exceptions.ProductNotFoundException;
-import africa.Semicolon.eStore.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +17,11 @@ import static africa.Semicolon.eStore.utils.Mapper.*;
 public class InventoryServicesImpl implements InventoryServices {
     @Autowired
     private Inventory inventory;
+
+    @Override
+    public Product findBy(String id) {
+        return inventory.findById(id).orElseThrow(() -> new ProductNotFoundException("Product not found"));
+    }
 
     @Override
     public AddProductResponse addProductWith(AddProductRequest addProductRequest) {
@@ -33,8 +37,7 @@ public class InventoryServicesImpl implements InventoryServices {
 
     @Override
     public FindProductResponse findProductWith(FindProductRequest findProductRequest) {
-        Product foundProduct = inventory.findByName(findProductRequest.getProductName());
-        if (foundProduct == null) throw new ProductNotFoundException("Product not found");
+        Product foundProduct = findBy(findProductRequest.getProductId());
         return mapFindProductResponse(foundProduct);
     }
 }

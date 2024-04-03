@@ -3,6 +3,7 @@ package africa.Semicolon.eStore.data.models;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -25,5 +26,6 @@ public class User {
     private Role role;
     private boolean isLoggedIn = true;
     private ShoppingCart cart;
+    @DBRef
     private List<Order> orders = new ArrayList<>();
 }

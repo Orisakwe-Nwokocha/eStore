@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public final class FindProductRequest {
     @NotNull(message = "Product name cannot be null")
-    private String productName;
+    private String productId;
 }
