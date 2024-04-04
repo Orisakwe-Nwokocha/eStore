@@ -2,7 +2,6 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.models.Item;
 import africa.Semicolon.eStore.data.models.Product;
-import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.FindProductRequest;
@@ -55,13 +54,16 @@ public class InventoryServicesImpl implements InventoryServices {
     }
 
     @Override
-    public void validate(ShoppingCart shoppingCart) {
-        shoppingCart.getItems().forEach(item -> validate(item.getQuantityOfProduct(), item.getProduct()));
-//        for (Item item : shoppingCart.getItems()) validate(item.getQuantityOfProduct(), item.getProduct());
+    public void validate(List<Item> items) {
+        items.forEach(item -> validate(item.getQuantityOfProduct(), item.getProduct()));
     }
 
     @Override
     public void updateProductQuantity(List<Item> items) {
-
+        items.forEach(item -> {
+            Product product = item.getProduct();
+            int newProductQuantity = product.getQuantity() - item.getQuantityOfProduct();
+            product.setQuantity(newProductQuantity);
+        });
     }
 }

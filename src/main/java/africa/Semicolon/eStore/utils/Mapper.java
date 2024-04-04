@@ -67,7 +67,7 @@ public final class Mapper {
             product.setCategory(ProductCategory.valueOf(productCategory));
         }
         catch (IllegalArgumentException e) {
-            throw new InvalidArgumentException("Category is not valid");
+            throw new InvalidArgumentException("Product category is not valid");
         }
         product.setName(addProductRequest.getName());
         product.setDescription(addProductRequest.getDescription());
@@ -142,8 +142,10 @@ public final class Mapper {
     }
 
     public static CreditCardInformation map(UpdateCreditCardInfoRequest updateCreditCardInfoRequest, CreditCardInformation creditCardInfo) {
-        creditCardInfo.setCardType(getCardType(updateCreditCardInfoRequest.getCreditCardNumber()));
+        CardType cardType = getCardType(updateCreditCardInfoRequest.getCreditCardNumber());
+        creditCardInfo.setCardType(cardType);
         creditCardInfo.setCreditCardNumber(updateCreditCardInfoRequest.getCreditCardNumber());
+        creditCardInfo.setCardHolderName(updateCreditCardInfoRequest.getCardHolderName());
         creditCardInfo.setCardExpirationMonth(updateCreditCardInfoRequest.getCardExpirationMonth());
         creditCardInfo.setCardExpirationYear(updateCreditCardInfoRequest.getCardExpirationYear());
         creditCardInfo.setCvv(updateCreditCardInfoRequest.getCvv());
@@ -176,5 +178,26 @@ public final class Mapper {
         order.setItems(buyer.getCart().getItems().toString());
         order.setTotalPrice(totalPrice);
         return order;
+    }
+
+    public static CheckoutResponse mapCheckoutResponse(Order newOrder) {
+        CheckoutResponse checkoutResponse = new CheckoutResponse();
+        checkoutResponse.setUsername(newOrder.getBuyer().getUsername());
+        checkoutResponse.setOrderId(newOrder.getId());
+        return checkoutResponse;
+    }
+
+    public static ViewOrderResponse mapViewOrderResponse(Order order) {
+        ViewOrderResponse viewOrderResponse = new ViewOrderResponse();
+        viewOrderResponse.setUsername(order.getBuyer().getUsername());
+        viewOrderResponse.setOrder(order.toString());
+        return viewOrderResponse;
+    }
+
+    public static ViewAllOrdersResponse mapViewAllOrdersResponse(List<Order> orders) {
+        ViewAllOrdersResponse viewAllOrdersResponse = new ViewAllOrdersResponse();
+        viewAllOrdersResponse.setUsername(orders.getFirst().getBuyer().getUsername());
+        viewAllOrdersResponse.setOrders(orders.toString());
+        return viewAllOrdersResponse;
     }
 }

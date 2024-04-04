@@ -22,9 +22,9 @@ public final class Order {
 
     @Override
     public String toString() {
-        String asterisk = "*".repeat(15);
-        String dateOrdered = dateOfOrder.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' HH:mm:ss a"));
-        String format = "%s%nOrder Id: %s%nNumber of items: %s%nItems: %sTotal Price: ₦%,.2f %nOrder Date: %s%n%s";
-        return String.format(format, asterisk, id, numberOfItems, items, totalPrice, dateOrdered, asterisk);
+        String equalsSign = "=".repeat(42);
+        String dateOrdered = dateOfOrder.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' hh:mm:ss a"));
+        String format = "%n%s%nOrder Id: %s%nNumber of items: %s%nItems: %s%nTotal Price: ₦%,.2f %nOrder Date: %s%n%s";
+        return String.format(format, equalsSign, id, numberOfItems, items, totalPrice, dateOrdered, equalsSign);
     }
 }

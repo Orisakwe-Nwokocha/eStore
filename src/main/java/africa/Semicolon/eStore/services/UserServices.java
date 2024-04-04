@@ -12,6 +12,9 @@ public interface UserServices {
     RemoveItemResponse removeFromCart(RemoveItemRequest removeItemRequest);
     ViewCartResponse viewCart(ViewCartRequest viewCartRequest);
     UpdateDeliveryDetailsResponse updateDeliveryDetails(UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest);
-    UpdateCreditCardInfoResponse updateCreditCardInfoResponse(UpdateCreditCardInfoRequest updateCreditCardInfoRequest);
+    UpdateCreditCardInfoResponse updateCreditCardInfo(UpdateCreditCardInfoRequest updateCreditCardInfoRequest);
     CheckoutResponse checkout(CheckoutRequest checkoutRequest);
+    ViewOrderResponse viewOrder(ViewOrderRequest viewOrderRequest);
+    ViewAllOrdersResponse viewAllOrders(ViewAllOrdersRequest viewAllOrdersRequest);
+
 }

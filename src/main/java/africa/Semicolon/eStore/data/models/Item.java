@@ -9,6 +9,6 @@ public final class Item {
 
     @Override
     public String toString() {
-        return String.format("Product:%n%s%nQuantity: %d", product, quantityOfProduct);
+        return String.format("%nProduct:%n%s%nQuantity: %d", product, quantityOfProduct);
     }
 }

@@ -3,7 +3,7 @@ package africa.Semicolon.eStore.dtos.responses;
 import lombok.Data;
 
 @Data
-public final class CheckoutResponse {
+public final class ViewAllOrdersResponse {
     private String username;
-    private String orderId;
+    private String orders;
 }

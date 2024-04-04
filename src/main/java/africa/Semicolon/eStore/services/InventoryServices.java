@@ -2,7 +2,6 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.models.Item;
 import africa.Semicolon.eStore.data.models.Product;
-import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.FindProductRequest;
 import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
@@ -17,6 +16,6 @@ public interface InventoryServices {
     FindAllProductsResponse findAllProducts();
     FindProductResponse findProductWith(FindProductRequest findProductRequest);
     void validate(int quantityOfProduct, Product product);
-    void validate(ShoppingCart shoppingCart);
+    void validate(List<Item> items);
     void updateProductQuantity(List<Item> items);
 }

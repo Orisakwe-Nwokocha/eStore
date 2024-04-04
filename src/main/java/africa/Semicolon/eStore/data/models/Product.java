@@ -22,9 +22,9 @@ public final class Product {
 
     @Override
     public String toString() {
-        String hashTag = "#".repeat(10);
-        String format = "%s%n%s%n%s%n%s%n%s%n₦%,.2f%n%s";
-        return String.format(format, hashTag, id, name, description, category, price, hashTag);
+        String asterisk = "*".repeat(20);
+        String format = "%s%n%s%n%s%n%s%n₦%,.2f%n%s";
+        return String.format(format, asterisk, name, description, category, price, asterisk);
     }
 
     @Override

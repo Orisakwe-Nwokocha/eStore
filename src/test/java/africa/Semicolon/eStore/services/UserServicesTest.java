@@ -27,6 +27,10 @@ public class UserServicesTest {
     private AddItemRequest addItemRequest;
     private ViewCartRequest viewCartRequest;
     private UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest;
+    private UpdateCreditCardInfoRequest updateCreditCardInfoRequest;
+    private CheckoutRequest checkoutRequest;
+    private ViewOrderRequest viewOrderRequest;
+    private ViewAllOrdersRequest viewAllOrdersRequest;
 
     @BeforeEach
     public void setUp() {
@@ -60,9 +64,31 @@ public class UserServicesTest {
         updateDeliveryDetailsRequest = new UpdateDeliveryDetailsRequest();
         updateDeliveryDetailsRequest.setUsername("username");
         updateDeliveryDetailsRequest.setReceiverName("receiverName");
-        updateDeliveryDetailsRequest.setStreet("streetName");
+        updateDeliveryDetailsRequest.setReceiverPhoneNumber("0802");
+        updateDeliveryDetailsRequest.setStreet("street");
+        updateDeliveryDetailsRequest.setState("state");
+        updateDeliveryDetailsRequest.setCityName("cityName");
+        updateDeliveryDetailsRequest.setCountryName("countryName");
+        updateDeliveryDetailsRequest.setHouseNumber("houseNumber");
 
+        updateCreditCardInfoRequest = new UpdateCreditCardInfoRequest();
+        updateCreditCardInfoRequest.setUsername("username");
+        updateCreditCardInfoRequest.setCreditCardNumber("37");
+        updateCreditCardInfoRequest.setCvv("001");
+        updateCreditCardInfoRequest.setCardHolderName("holderName");
+        updateCreditCardInfoRequest.setCardExpirationMonth("12");
+        updateCreditCardInfoRequest.setCardExpirationYear("2024");
+
+        checkoutRequest = new CheckoutRequest();
+        checkoutRequest.setUsername("username");
+
+        viewOrderRequest = new ViewOrderRequest();
+        viewOrderRequest.setUsername("username");
+
+        viewAllOrdersRequest = new ViewAllOrdersRequest();
+        viewAllOrdersRequest.setUsername("username");
     }
+
     @Test
     public void registerUser_numberOfUsersIsOneTest() {
         assertThat(users.count(), is(0L));
@@ -255,11 +281,97 @@ public class UserServicesTest {
     public void updateCreditCardInfoTest() {
         userServices.register(registerRequest);
         userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
-        UpdateCreditCardInfoRequest updateCreditCardInfoRequest = new UpdateCreditCardInfoRequest();
-        updateCreditCardInfoRequest.setUsername("username");
-        updateCreditCardInfoRequest.setCreditCardNumber("37");
-        var updateCreditCardInfoResponse = userServices.updateCreditCardInfoResponse(updateCreditCardInfoRequest);
+
+        var updateCreditCardInfoResponse = userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
         System.out.println(updateCreditCardInfoResponse.getBillingInformation());
         assertThat(updateCreditCardInfoResponse.getBillingInformation(), notNullValue());
+    }
+
+    @Test
+    public void updateCreditCardInfoWithInvalidCardType_throwsInvalidCardTypeExceptionTest() {
+        userServices.register(registerRequest);
+        userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+
+        updateCreditCardInfoRequest.setCreditCardNumber("36");
+        try {
+            userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
+        }
+        catch (InvalidCardTypeException e) {
+            assertThat(e.getMessage(), containsString("Card type is not valid"));
+        }
+    }
+
+    @Test
+    public void givenItemInCart_checkout_numberOfItemsInCartIs0_numberOfOrdersIs1Test() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
+
+        var user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), hasSize(1));
+        assertThat(user.getOrders(), hasSize(0));
+        var checkoutResponse = userServices.checkout(checkoutRequest);
+        user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), is(empty()));
+        assertThat(user.getOrders(), hasSize(1));
+        assertThat(checkoutResponse.getOrderId(), notNullValue());
+    }
+
+    @Test
+    public void given1PlacedOrder_viewOrderTest() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
+        var checkoutResponse = userServices.checkout(checkoutRequest);
+
+        viewOrderRequest.setOrderId(checkoutResponse.getOrderId());
+        var viewOrderResponse = userServices.viewOrder(viewOrderRequest);
+        System.out.println(viewOrderResponse.getOrder());
+        assertThat(viewOrderResponse.getOrder(), notNullValue());
+    }
+
+    @Test
+    public void given2PlacedOrders_viewAllOrders_numberOfUserOrdersIs2Test() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
+        userServices.checkout(checkoutRequest);
+        var user = users.findByUsername("username");
+        assertThat(user.getOrders(), hasSize(1));
+
+        userServices.addToCart(addItemRequest);
+        addProductRequest.setName("jacket");
+        addProductRequest.setDescription("hoodie");
+        addProductRequest.setCategory("clothing");
+        addProductRequest.setQuantity(20);
+        addProductRequest.setPrice(20_000);
+        addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        userServices.checkout(checkoutRequest);
+        user = users.findByUsername("username");
+        assertThat(user.getOrders(), hasSize(2));
+
+        var viewAllOrdersResponse = userServices.viewAllOrders(viewAllOrdersRequest);
+        System.out.println(viewAllOrdersResponse.getOrders());
+        assertThat(viewAllOrdersResponse.getOrders(), notNullValue());
     }
 }

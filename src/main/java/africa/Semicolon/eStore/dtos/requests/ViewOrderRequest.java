@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public final class RemoveItemRequest {
+public final class ViewOrderRequest {
     @NotNull(message = "Username cannot be null")
     private String username;
-    @NotNull(message = "Product id cannot be null")
-    private String productId;
+    @NotNull(message = "OrderId cannot be null")
+    private String orderId;
 }
