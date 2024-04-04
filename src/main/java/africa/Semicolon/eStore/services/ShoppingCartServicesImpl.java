@@ -19,12 +19,14 @@ public class ShoppingCartServicesImpl implements ShoppingCartServices {
     @Override
     public ShoppingCart addToCartWith(AddItemRequest addItemRequest, User user) {
         Product product = inventoryServices.findBy(addItemRequest.getProductId());
-        validate(addItemRequest.getQuantityOfProduct());
+        inventoryServices.validate(addItemRequest.getQuantityOfProduct(), product);
+
         ShoppingCart shoppingCart = user.getCart();
         if (isPresent(product, shoppingCart)) updateQuantityOf(product, addItemRequest.getQuantityOfProduct(), shoppingCart);
         else addNewItemWith(addItemRequest, shoppingCart);
         return shoppingCart;
     }
+
 
     @Override
     public ShoppingCart removeFromCartWith(RemoveItemRequest removeItemRequest, User user) {
@@ -56,9 +58,5 @@ public class ShoppingCartServicesImpl implements ShoppingCartServices {
     private boolean isPresent(Product product, ShoppingCart cart) {
         for (Item item : cart.getItems()) if (item.getProduct().equals(product)) return true;
         return false;
-    }
-
-    private void validate(int quantityOfProduct) {
-        if (quantityOfProduct <= 0) throw new InvalidArgumentException("Quantity of product must be positive");
     }
 }

@@ -247,8 +247,19 @@ public class UserServicesTest {
     public void updateDeliveryDetailsTest() {
         userServices.register(registerRequest);
         var updateDeliveryDetailsResponse = userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
-        System.out.println(updateDeliveryDetailsResponse);
         System.out.println(updateDeliveryDetailsResponse.getBillingInformation());
         assertThat(updateDeliveryDetailsResponse.getBillingInformation(), notNullValue());
+    }
+
+    @Test
+    public void updateCreditCardInfoTest() {
+        userServices.register(registerRequest);
+        userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        UpdateCreditCardInfoRequest updateCreditCardInfoRequest = new UpdateCreditCardInfoRequest();
+        updateCreditCardInfoRequest.setUsername("username");
+        updateCreditCardInfoRequest.setCreditCardNumber("37");
+        var updateCreditCardInfoResponse = userServices.updateCreditCardInfoResponse(updateCreditCardInfoRequest);
+        System.out.println(updateCreditCardInfoResponse.getBillingInformation());
+        assertThat(updateCreditCardInfoResponse.getBillingInformation(), notNullValue());
     }
 }

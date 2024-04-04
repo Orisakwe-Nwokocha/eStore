@@ -21,6 +21,7 @@ public final class Mapper {
         String username = lowerCaseValueOf(registerRequest.getUsername());
         String password = encode(registerRequest.getPassword());
         String role = upperCaseValueOf(registerRequest.getRole());
+
         User user = new User();
         try {
             user.setRole(Role.valueOf(role));
@@ -28,6 +29,7 @@ public final class Mapper {
         catch (IllegalArgumentException e) {
             throw new InvalidArgumentException("Invalid role: " + role);
         }
+
         user.setUsername(username);
         user.setPassword(password);
         user.setName(registerRequest.getName());
@@ -165,5 +167,14 @@ public final class Mapper {
         updateCreditCardInfoResponse.setUsername(user.getUsername());
         updateCreditCardInfoResponse.setBillingInformation(user.getBillingInformation().toString());
         return updateCreditCardInfoResponse;
+    }
+
+    public static Order map(User buyer, double totalPrice) {
+        Order order = new Order();
+        order.setBuyer(buyer);
+        order.setNumberOfItems(buyer.getCart().getItems().size());
+        order.setItems(buyer.getCart().getItems().toString());
+        order.setTotalPrice(totalPrice);
+        return order;
     }
 }
