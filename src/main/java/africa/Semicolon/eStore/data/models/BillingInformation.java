@@ -3,7 +3,7 @@ package africa.Semicolon.eStore.data.models;
 import lombok.Data;
 
 @Data
-public class BillingInformation {
+public final class BillingInformation {
     private String receiverName;
     private String receiverPhoneNumber;
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public final class ShoppingCart {
-    private final List<Item> items = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
 
     @Override
     public String toString() {

@@ -3,7 +3,7 @@ package africa.Semicolon.eStore.data.models;
 import lombok.Data;
 
 @Data
-public class CreditCardInformation {
+public final class CreditCardInformation {
     private String creditCardNumber;
     private String cardHolderName;
     private String cardExpirationMonth;

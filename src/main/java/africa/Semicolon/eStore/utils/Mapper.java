@@ -84,8 +84,8 @@ public final class Mapper {
         return addProductResponse;
     }
 
-    public static GetProductsResponse mapGetProductsResponse(List<Product> allProducts) {
-        GetProductsResponse getProductsResponse = new GetProductsResponse();
+    public static FindAllProductsResponse mapGetProductsResponse(List<Product> allProducts) {
+        FindAllProductsResponse getProductsResponse = new FindAllProductsResponse();
         getProductsResponse.setProducts(allProducts.toString());
         return getProductsResponse;
     }

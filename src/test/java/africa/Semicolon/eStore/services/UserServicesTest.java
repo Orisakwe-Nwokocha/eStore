@@ -3,21 +3,14 @@ package africa.Semicolon.eStore.services;
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.data.repositories.Users;
 import africa.Semicolon.eStore.dtos.requests.*;
-import africa.Semicolon.eStore.exceptions.IncorrectPasswordException;
-import africa.Semicolon.eStore.exceptions.InvalidUserRoleException;
-import africa.Semicolon.eStore.exceptions.UserExistsException;
-import africa.Semicolon.eStore.exceptions.UserNotFoundException;
+import africa.Semicolon.eStore.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigDecimal;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserServicesTest {
@@ -32,12 +25,12 @@ public class UserServicesTest {
     private LoginRequest loginRequest;
     private AddProductRequest addProductRequest;
     private AddItemRequest addItemRequest;
-    private RemoveItemRequest removeItemRequest;
     private ViewCartRequest viewCartRequest;
 
     @BeforeEach
     public void setUp() {
         users.deleteAll();
+        inventory.deleteAll();
 
         registerRequest = new RegisterRequest();
         registerRequest.setUsername("username");
@@ -55,6 +48,13 @@ public class UserServicesTest {
         addProductRequest.setQuantity(10);
         addProductRequest.setCategory("electronics");
         addProductRequest.setPrice(350_000);
+
+        addItemRequest = new AddItemRequest();
+        addItemRequest.setUsername("username");
+        addItemRequest.setQuantityOfProduct(3);
+
+        viewCartRequest = new ViewCartRequest();
+        viewCartRequest.setUsername("username");
     }
     @Test
     public void registerUser_numberOfUsersIsOneTest() {
@@ -123,6 +123,7 @@ public class UserServicesTest {
     @Test
     public void addProduct_numberOfProductsIs1Test() {
         assertThat(inventory.count(), is(0L));
+        registerRequest.setUsername("username2");
         registerRequest.setRole("admin");
         userServices.register(registerRequest);
 
@@ -134,6 +135,7 @@ public class UserServicesTest {
     @Test
     public void givenInvalidUserRole_addProduct_throwsInvalidUserRoleException_numberOfProductsIs0Test() {
         assertThat(inventory.count(), is(0L));
+        registerRequest.setUsername("username2");
         userServices.register(registerRequest);
         try {
             userServices.addProduct(addProductRequest);
@@ -145,14 +147,92 @@ public class UserServicesTest {
     }
 
     @Test
-    void addToCart() {
+    public void addToCart_numberOfItemsInUserCartIs1Test() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+
+        var user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), hasSize(0));
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        var addItemResponse = userServices.addToCart(addItemRequest);
+        user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), hasSize(1));
+        assertThat(addItemResponse.getShoppingCart(), notNullValue());
     }
 
     @Test
-    void removeFromCart() {
+    public void addSameProductToCart_quantityOfProductAddedIs5_numberOfItemsInUserCartIs1Test() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        var user = users.findByUsername("username");
+        var cart = user.getCart();
+        assertThat(cart.getItems(), hasSize(1));
+        assertThat(cart.getItems().getFirst().getQuantityOfProduct(), is(3));
+
+        addItemRequest.setQuantityOfProduct(5);
+        var addItemResponse = userServices.addToCart(addItemRequest);
+        user = users.findByUsername("username");
+        cart = user.getCart();
+        assertThat(cart.getItems(), hasSize(1));
+        assertThat(cart.getItems().getFirst().getQuantityOfProduct(), is(5));
+        assertThat(addItemResponse.getShoppingCart(), notNullValue());
     }
 
     @Test
-    void viewCart() {
+    public void givenItemInCart_removeItemFromCart_numberOfItemsInUserCartIs0Test() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+        var user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), hasSize(1));
+
+        RemoveItemRequest removeItemRequest = new RemoveItemRequest();
+        removeItemRequest.setProductId(addProductResponse.getProductId());
+        removeItemRequest.setUsername("username");
+        var removeItemResponse = userServices.removeFromCart(removeItemRequest);
+        user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), hasSize(0));
+        assertThat(removeItemResponse.getShoppingCart(), notNullValue());
+    }
+
+    @Test
+    public void givenItemInCart_viewCartTest() {
+        userServices.register(registerRequest);
+        registerRequest.setUsername("username2");
+        registerRequest.setRole("admin");
+        userServices.register(registerRequest);
+        var addProductResponse = userServices.addProduct(addProductRequest);
+        addItemRequest.setProductId(addProductResponse.getProductId());
+        userServices.addToCart(addItemRequest);
+
+        var viewCartResponse = userServices.viewCart(viewCartRequest);
+        assertThat(viewCartResponse.getShoppingCart(), notNullValue());
+    }
+
+    @Test
+    public void givenEmptyCart_viewCart_throwsShoppingCartIsEmptyExceptionTest() {
+        userServices.register(registerRequest);
+        var user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), is(empty()));
+        try {
+            userServices.viewCart(viewCartRequest);
+        }
+        catch (ShoppingCartIsEmptyException e) {
+            assertThat(e.getMessage(), containsString("Your cart is empty"));
+        }
+        user = users.findByUsername("username");
+        assertThat(user.getCart().getItems(), is(empty()));
     }
 }

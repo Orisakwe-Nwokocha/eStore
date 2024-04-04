@@ -25,7 +25,7 @@ public class User {
     @NotNull(message = "Please select a role")
     private Role role;
     private boolean isLoggedIn = true;
-    private ShoppingCart cart;
+    private ShoppingCart cart = new ShoppingCart();
     @DBRef
     private List<Order> orders = new ArrayList<>();
 }

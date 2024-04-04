@@ -3,7 +3,7 @@ package africa.Semicolon.eStore.data.models;
 import lombok.Data;
 
 @Data
-public class Address {
+public final class Address {
     private String cityName;
     private String countryName;
     private String houseNumber;

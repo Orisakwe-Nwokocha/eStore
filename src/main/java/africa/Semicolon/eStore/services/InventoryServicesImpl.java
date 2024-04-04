@@ -6,7 +6,7 @@ import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.FindProductRequest;
 import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
 import africa.Semicolon.eStore.dtos.responses.FindProductResponse;
-import africa.Semicolon.eStore.dtos.responses.GetProductsResponse;
+import africa.Semicolon.eStore.dtos.responses.FindAllProductsResponse;
 import africa.Semicolon.eStore.exceptions.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class InventoryServicesImpl implements InventoryServices {
     }
 
     @Override
-    public GetProductsResponse findAllProducts() {
+    public FindAllProductsResponse findAllProducts() {
         return mapGetProductsResponse(inventory.findAll());
     }
 
