@@ -26,6 +26,7 @@ public class User {
     private Role role;
     private boolean isLoggedIn = true;
     private ShoppingCart cart = new ShoppingCart();
+    private BillingInformation BillingInformation = new BillingInformation();
     @DBRef
     private List<Order> orders = new ArrayList<>();
 }

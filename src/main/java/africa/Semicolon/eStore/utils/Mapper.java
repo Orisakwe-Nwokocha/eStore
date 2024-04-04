@@ -1,16 +1,17 @@
 package africa.Semicolon.eStore.utils;
 
-import africa.Semicolon.eStore.data.models.Product;
-import africa.Semicolon.eStore.data.models.ProductCategory;
-import africa.Semicolon.eStore.data.models.Role;
-import africa.Semicolon.eStore.data.models.User;
+import africa.Semicolon.eStore.data.models.*;
 import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
 import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
+import africa.Semicolon.eStore.dtos.requests.UpdateCreditCardInfoRequest;
+import africa.Semicolon.eStore.dtos.requests.UpdateDeliveryDetailsRequest;
 import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
+import africa.Semicolon.eStore.exceptions.InvalidCardTypeException;
 
 import java.util.List;
 
+import static africa.Semicolon.eStore.data.models.CardType.*;
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cleaner.upperCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cryptography.encode;
@@ -115,5 +116,54 @@ public final class Mapper {
         viewCartResponse.setUsername(user.getUsername());
         viewCartResponse.setShoppingCart(user.getCart().toString());
         return viewCartResponse;
+    }
+
+    public static BillingInformation map(UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest, BillingInformation billingInformation) {
+        billingInformation.setReceiverName(updateDeliveryDetailsRequest.getReceiverName());
+        billingInformation.setReceiverPhoneNumber(updateDeliveryDetailsRequest.getReceiverPhoneNumber());
+
+        Address deliveryAddress = billingInformation.getDeliveryAddress();
+        deliveryAddress.setStreet(updateDeliveryDetailsRequest.getStreet());
+        deliveryAddress.setCityName(updateDeliveryDetailsRequest.getCityName());
+        deliveryAddress.setState(updateDeliveryDetailsRequest.getState());
+        deliveryAddress.setCountryName(updateDeliveryDetailsRequest.getCountryName());
+        deliveryAddress.setHouseNumber(updateDeliveryDetailsRequest.getHouseNumber());
+
+        return billingInformation;
+    }
+
+    public static UpdateDeliveryDetailsResponse mapUpdateDeliveryDetailsResponse(User user) {
+        UpdateDeliveryDetailsResponse updateDeliveryDetailsResponse = new UpdateDeliveryDetailsResponse();
+        updateDeliveryDetailsResponse.setUsername(user.getUsername());
+        updateDeliveryDetailsResponse.setBillingInformation(user.getBillingInformation().toString());
+        return updateDeliveryDetailsResponse;
+    }
+
+    public static CreditCardInformation map(UpdateCreditCardInfoRequest updateCreditCardInfoRequest, CreditCardInformation creditCardInfo) {
+        creditCardInfo.setCardType(getCardType(updateCreditCardInfoRequest.getCreditCardNumber()));
+        creditCardInfo.setCreditCardNumber(updateCreditCardInfoRequest.getCreditCardNumber());
+        creditCardInfo.setCardExpirationMonth(updateCreditCardInfoRequest.getCardExpirationMonth());
+        creditCardInfo.setCardExpirationYear(updateCreditCardInfoRequest.getCardExpirationYear());
+        creditCardInfo.setCvv(updateCreditCardInfoRequest.getCvv());
+        return creditCardInfo;
+    }
+
+    private static CardType getCardType(String creditCardNumber) {
+        char firstDigit = creditCardNumber.charAt(0);
+        char secondDigit = creditCardNumber.charAt(1);
+
+        return switch (firstDigit) {
+            case '3' -> {if (secondDigit == '7') yield AMERICA_EXPRESS; else throw new InvalidCardTypeException("Card type is not valid");}
+            case '4' -> VISA_CARD;
+            case '5' -> (secondDigit == '5' && creditCardNumber.length() == 18) ? VERVE : MASTER_CARD;
+            default -> throw new InvalidCardTypeException("Card type is not valid");
+        };
+    }
+
+    public static UpdateCreditCardInfoResponse mapUpdateCreditCardInfoResponse(User user) {
+        UpdateCreditCardInfoResponse updateCreditCardInfoResponse = new UpdateCreditCardInfoResponse();
+        updateCreditCardInfoResponse.setUsername(user.getUsername());
+        updateCreditCardInfoResponse.setBillingInformation(user.getBillingInformation().toString());
+        return updateCreditCardInfoResponse;
     }
 }

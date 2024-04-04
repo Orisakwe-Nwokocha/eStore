@@ -18,13 +18,13 @@ public final class Order {
     private int numberOfItems;
     private String items;
     private double totalPrice;
-    private LocalDateTime orderDate = LocalDateTime.now();
+    private LocalDateTime dateOfOrder = LocalDateTime.now();
 
     @Override
     public String toString() {
         String asterisk = "*".repeat(15);
-        String dateOfOrder = orderDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' HH:mm:ss a"));
+        String dateOrdered = dateOfOrder.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' HH:mm:ss a"));
         String format = "%s%nOrder Id: %s%nNumber of items: %s%nItems: %sTotal Price: ₦%,.2f %nOrder Date: %s%n%s";
-        return String.format(format, asterisk, id, numberOfItems, items, totalPrice, dateOfOrder, asterisk);
+        return String.format(format, asterisk, id, numberOfItems, items, totalPrice, dateOrdered, asterisk);
     }
 }

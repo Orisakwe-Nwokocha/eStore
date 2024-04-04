@@ -1,11 +1,14 @@
 package africa.Semicolon.eStore.services;
 
+import africa.Semicolon.eStore.data.models.BillingInformation;
+import africa.Semicolon.eStore.data.models.CreditCardInformation;
 import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.data.repositories.Users;
 import africa.Semicolon.eStore.dtos.requests.*;
 import africa.Semicolon.eStore.dtos.responses.*;
 import africa.Semicolon.eStore.exceptions.*;
+import africa.Semicolon.eStore.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +85,24 @@ public class UserServicesImpl implements UserServices {
         validateLoginStatusOf(foundUser);
         if (foundUser.getCart().getItems().isEmpty()) throw new ShoppingCartIsEmptyException("Your cart is empty");
         return mapViewCartResponse(foundUser);
+    }
+
+    @Override
+    public UpdateDeliveryDetailsResponse updateDeliveryDetails(UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest) {
+        User foundUser = findUserBy(updateDeliveryDetailsRequest.getUsername());
+        BillingInformation updatedBillingInformation = map(updateDeliveryDetailsRequest, foundUser.getBillingInformation());
+        foundUser.setBillingInformation(updatedBillingInformation);
+        User savedUser = users.save(foundUser);
+        return mapUpdateDeliveryDetailsResponse(foundUser);
+    }
+
+    @Override
+    public UpdateCreditCardInfoResponse updateCreditCardInfoResponse(UpdateCreditCardInfoRequest updateCreditCardInfoRequest) {
+        User foundUser = findUserBy(updateCreditCardInfoRequest.getUsername());
+        CreditCardInformation creditCardInfo = map(updateCreditCardInfoRequest, foundUser.getBillingInformation().getCreditCardInfo());
+        foundUser.getBillingInformation().setCreditCardInfo(creditCardInfo);
+        User savedUser = users.save(foundUser);
+        return mapUpdateCreditCardInfoResponse(foundUser);
     }
 
     private void validate(User user) {

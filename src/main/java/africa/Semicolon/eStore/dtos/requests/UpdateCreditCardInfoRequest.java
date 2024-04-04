@@ -1,10 +1,13 @@
-package africa.Semicolon.eStore.data.models;
+package africa.Semicolon.eStore.dtos.requests;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public final class CreditCardInformation {
+public final class UpdateCreditCardInfoRequest {
+    @NotNull(message = "Username cannot be null")
+    private String username;
+
     @NotNull(message = "Credit card number cannot be null")
     private String creditCardNumber;
 
@@ -19,13 +22,4 @@ public final class CreditCardInformation {
 
     @NotNull(message = "CVV cannot be null")
     private String cvv;
-
-    @NotNull(message = "Card type cannot be null")
-    private CardType cardType;
-
-    @Override
-    public String toString() {
-        String format = "%n{%n\tCard Holder Name: %s%n\tExpiration Date: %s/%s%n\tCard Type: %s%n}";
-        return String.format(format, cardHolderName, cardExpirationMonth, cardExpirationYear, cardType);
-    }
 }

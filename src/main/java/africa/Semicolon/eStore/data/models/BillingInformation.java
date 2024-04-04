@@ -6,8 +6,6 @@ import lombok.Data;
 public final class BillingInformation {
     private String receiverName;
     private String receiverPhoneNumber;
-
-    private Address deliveryAddress;
-    private CreditCardInformation creditCardInfo;
-
+    private Address deliveryAddress = new Address();
+    private CreditCardInformation creditCardInfo = new CreditCardInformation();
 }

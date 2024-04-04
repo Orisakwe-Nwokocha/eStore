@@ -26,6 +26,7 @@ public class UserServicesTest {
     private AddProductRequest addProductRequest;
     private AddItemRequest addItemRequest;
     private ViewCartRequest viewCartRequest;
+    private UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest;
 
     @BeforeEach
     public void setUp() {
@@ -55,6 +56,12 @@ public class UserServicesTest {
 
         viewCartRequest = new ViewCartRequest();
         viewCartRequest.setUsername("username");
+
+        updateDeliveryDetailsRequest = new UpdateDeliveryDetailsRequest();
+        updateDeliveryDetailsRequest.setUsername("username");
+        updateDeliveryDetailsRequest.setReceiverName("receiverName");
+        updateDeliveryDetailsRequest.setStreet("streetName");
+
     }
     @Test
     public void registerUser_numberOfUsersIsOneTest() {
@@ -234,5 +241,14 @@ public class UserServicesTest {
         }
         user = users.findByUsername("username");
         assertThat(user.getCart().getItems(), is(empty()));
+    }
+
+    @Test
+    public void updateDeliveryDetailsTest() {
+        userServices.register(registerRequest);
+        var updateDeliveryDetailsResponse = userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        System.out.println(updateDeliveryDetailsResponse);
+        System.out.println(updateDeliveryDetailsResponse.getBillingInformation());
+        assertThat(updateDeliveryDetailsResponse.getBillingInformation(), notNullValue());
     }
 }
