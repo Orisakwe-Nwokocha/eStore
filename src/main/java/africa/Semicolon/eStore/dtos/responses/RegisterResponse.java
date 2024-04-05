@@ -6,5 +6,4 @@ import lombok.Data;
 public final class RegisterResponse {
     private String id;
     private String username;
-    private String dateTimeRegistered;
 }
