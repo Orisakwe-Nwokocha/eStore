@@ -16,5 +16,4 @@ public interface UserServices {
     CheckoutResponse checkout(CheckoutRequest checkoutRequest);
     ViewOrderResponse viewOrder(ViewOrderRequest viewOrderRequest);
     ViewAllOrdersResponse viewAllOrders(ViewAllOrdersRequest viewAllOrdersRequest);
-
 }

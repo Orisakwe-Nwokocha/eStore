@@ -1,0 +1,140 @@
+package africa.Semicolon.eStore.controllers;
+
+import africa.Semicolon.eStore.dtos.requests.*;
+import africa.Semicolon.eStore.dtos.responses.*;
+import africa.Semicolon.eStore.exceptions.EstoreAppException;
+import africa.Semicolon.eStore.services.UserServices;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.*;
+
+@RestController
+@RequestMapping("/user")
+public class UserControllers {
+    @Autowired
+    private UserServices userServices;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        try {
+            var result = userServices.register(registerRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
+        try {
+            var result = userServices.login(loginRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/logout")
+    public ResponseEntity<?> logout(@Valid @RequestBody LogoutRequest logoutRequest) {
+        try {
+            var result = userServices.logout(logoutRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/add-product")
+    public ResponseEntity<?> addProduct(@Valid @RequestBody AddProductRequest addProductRequest) {
+        try {
+            var result = userServices.addProduct(addProductRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), CREATED);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/add-to-cart")
+    public ResponseEntity<?> addToCart(@Valid @RequestBody AddItemRequest addItemRequest) {
+        try {
+            var result = userServices.addToCart(addItemRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/remove-from-cart")
+    public ResponseEntity<?> removeFromCart(@Valid @RequestBody RemoveItemRequest removeItemRequest) {
+        try {
+            var result = userServices.removeFromCart(removeItemRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/view-cart")
+    public ResponseEntity<?> viewCart(@Valid @RequestBody ViewCartRequest viewCartRequest) {
+        try {
+            var result = userServices.viewCart(viewCartRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/update-delivery-details")
+    public ResponseEntity<?> updateDeliveryDetails(@Valid @RequestBody UpdateDeliveryDetailsRequest updateDeliveryDetailsRequest) {
+        try {
+            var result = userServices.updateDeliveryDetails(updateDeliveryDetailsRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PatchMapping("/update-credit-card-info")
+    public ResponseEntity<?> updateCreditCardInfo(@Valid @RequestBody UpdateCreditCardInfoRequest updateCreditCardInfoRequest) {
+        try {
+            var result = userServices.updateCreditCardInfo(updateCreditCardInfoRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkout(@Valid @RequestBody CheckoutRequest checkoutRequest) {
+        try {
+            var result = userServices.checkout(checkoutRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/view-order")
+    public ResponseEntity<?> viewOrder(@Valid @RequestBody ViewOrderRequest viewOrderRequest) {
+        try {
+            var result = userServices.viewOrder(viewOrderRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/view-all-orders")
+    public ResponseEntity<?> viewAllOrders(@Valid @RequestBody ViewAllOrdersRequest viewAllOrdersRequest) {
+        try {
+            var result = userServices.viewAllOrders(viewAllOrdersRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
+}
