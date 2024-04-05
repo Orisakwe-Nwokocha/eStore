@@ -1,5 +1,6 @@
 package africa.Semicolon.eStore.data.models;
 
+import africa.Semicolon.eStore.data.constants.CardType;
 import lombok.Data;
 
 @Data

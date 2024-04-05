@@ -2,11 +2,11 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.models.Item;
 import africa.Semicolon.eStore.data.models.Product;
-import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
-import africa.Semicolon.eStore.dtos.requests.FindProductRequest;
-import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
-import africa.Semicolon.eStore.dtos.responses.FindProductResponse;
-import africa.Semicolon.eStore.dtos.responses.FindAllProductsResponse;
+import africa.Semicolon.eStore.dto.requests.AddProductRequest;
+import africa.Semicolon.eStore.dto.requests.FindProductRequest;
+import africa.Semicolon.eStore.dto.responses.AddProductResponse;
+import africa.Semicolon.eStore.dto.responses.FindProductResponse;
+import africa.Semicolon.eStore.dto.responses.FindAllProductsResponse;
 
 import java.util.List;
 

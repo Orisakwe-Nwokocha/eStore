@@ -2,10 +2,10 @@ package africa.Semicolon.eStore.controllers;
 
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.data.repositories.Users;
-import africa.Semicolon.eStore.dtos.requests.*;
-import africa.Semicolon.eStore.dtos.responses.AddProductResponse;
-import africa.Semicolon.eStore.dtos.responses.ApiResponse;
-import africa.Semicolon.eStore.dtos.responses.CheckoutResponse;
+import africa.Semicolon.eStore.dto.requests.*;
+import africa.Semicolon.eStore.dto.responses.AddProductResponse;
+import africa.Semicolon.eStore.dto.responses.ApiResponse;
+import africa.Semicolon.eStore.dto.responses.CheckoutResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,17 +1,20 @@
 package africa.Semicolon.eStore.utils;
 
+import africa.Semicolon.eStore.data.constants.CardType;
+import africa.Semicolon.eStore.data.constants.ProductCategory;
+import africa.Semicolon.eStore.data.constants.Role;
 import africa.Semicolon.eStore.data.models.*;
-import africa.Semicolon.eStore.dtos.requests.AddProductRequest;
-import africa.Semicolon.eStore.dtos.requests.RegisterRequest;
-import africa.Semicolon.eStore.dtos.requests.UpdateCreditCardInfoRequest;
-import africa.Semicolon.eStore.dtos.requests.UpdateDeliveryDetailsRequest;
-import africa.Semicolon.eStore.dtos.responses.*;
+import africa.Semicolon.eStore.dto.requests.AddProductRequest;
+import africa.Semicolon.eStore.dto.requests.RegisterRequest;
+import africa.Semicolon.eStore.dto.requests.UpdateCreditCardInfoRequest;
+import africa.Semicolon.eStore.dto.requests.UpdateDeliveryDetailsRequest;
+import africa.Semicolon.eStore.dto.responses.*;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 import africa.Semicolon.eStore.exceptions.InvalidCardTypeException;
 
 import java.util.List;
 
-import static africa.Semicolon.eStore.data.models.CardType.*;
+import static africa.Semicolon.eStore.data.constants.CardType.*;
 import static africa.Semicolon.eStore.utils.Cleaner.lowerCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cleaner.upperCaseValueOf;
 import static africa.Semicolon.eStore.utils.Cryptography.encode;

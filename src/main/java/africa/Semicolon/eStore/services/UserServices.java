@@ -1,7 +1,7 @@
 package africa.Semicolon.eStore.services;
 
-import africa.Semicolon.eStore.dtos.requests.*;
-import africa.Semicolon.eStore.dtos.responses.*;
+import africa.Semicolon.eStore.dto.requests.*;
+import africa.Semicolon.eStore.dto.responses.*;
 
 public interface UserServices {
     RegisterResponse register(RegisterRequest registerRequest);

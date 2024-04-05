@@ -2,15 +2,13 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.data.repositories.Users;
-import africa.Semicolon.eStore.dtos.requests.*;
-import africa.Semicolon.eStore.dtos.responses.FindAllProductsResponse;
+import africa.Semicolon.eStore.dto.requests.*;
 import africa.Semicolon.eStore.exceptions.ProductNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -74,7 +72,7 @@ public class InventoryServicesTest {
         userServices.addProduct(addProductRequest);
         findProductRequest.setProductId("non-existing-product-id");
         try {
-            var findProductResponse = inventoryServices.findProductWith(findProductRequest);
+            inventoryServices.findProductWith(findProductRequest);
         }
         catch (ProductNotFoundException e) {
             assertThat(e.getMessage(), containsString("Product not found"));

@@ -1,7 +1,7 @@
 package africa.Semicolon.eStore.controllers;
 
-import africa.Semicolon.eStore.dtos.requests.FindProductRequest;
-import africa.Semicolon.eStore.dtos.responses.ApiResponse;
+import africa.Semicolon.eStore.dto.requests.FindProductRequest;
+import africa.Semicolon.eStore.dto.responses.ApiResponse;
 import africa.Semicolon.eStore.exceptions.EstoreAppException;
 import africa.Semicolon.eStore.services.InventoryServices;
 import jakarta.validation.Valid;

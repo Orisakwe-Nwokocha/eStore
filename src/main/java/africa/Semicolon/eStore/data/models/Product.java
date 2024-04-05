@@ -1,5 +1,6 @@
 package africa.Semicolon.eStore.data.models;
 
+import africa.Semicolon.eStore.data.constants.ProductCategory;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.data.annotation.Id;

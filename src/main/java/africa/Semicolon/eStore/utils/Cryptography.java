@@ -1,7 +1,7 @@
 package africa.Semicolon.eStore.utils;
 
 import africa.Semicolon.eStore.data.models.User;
-import africa.Semicolon.eStore.dtos.requests.LoginRequest;
+import africa.Semicolon.eStore.dto.requests.LoginRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

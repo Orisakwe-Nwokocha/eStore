@@ -2,7 +2,7 @@ package africa.Semicolon.eStore.services;
 
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.data.repositories.Users;
-import africa.Semicolon.eStore.dtos.requests.*;
+import africa.Semicolon.eStore.dto.requests.*;
 import africa.Semicolon.eStore.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
