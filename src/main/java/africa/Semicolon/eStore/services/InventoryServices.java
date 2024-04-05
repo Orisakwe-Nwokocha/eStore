@@ -13,8 +13,8 @@ import java.util.List;
 public interface InventoryServices {
     Product findBy(String id);
     AddProductResponse addProductWith(AddProductRequest addProductRequest);
-    FindAllProductsResponse findAllProducts();
     FindProductResponse findProductWith(FindProductRequest findProductRequest);
+    FindAllProductsResponse findAllProducts();
     void validate(int quantityOfProduct, Product product);
     void validate(List<Item> items);
     void updateProductQuantity(List<Item> items);

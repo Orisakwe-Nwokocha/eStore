@@ -83,7 +83,6 @@ public class UserServicesImpl implements UserServices {
     public ViewCartResponse viewCart(ViewCartRequest viewCartRequest) {
         User foundUser = findUserBy(viewCartRequest.getUsername());
         validateLoginStatusOf(foundUser);
-        validateLoginStatusOf(foundUser);
         if (foundUser.getCart().getItems().isEmpty()) throw new ShoppingCartIsEmptyException("Your cart is empty");
         return mapViewCartResponse(foundUser);
     }

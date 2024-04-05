@@ -8,6 +8,6 @@ public final class AddProductResponse {
     private String productName;
     private String category;
     private String description;
-    private double price;
-    private int quantity;
+    private Double price;
+    private Integer quantity;
 }

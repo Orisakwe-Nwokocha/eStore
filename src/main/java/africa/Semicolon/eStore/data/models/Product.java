@@ -13,7 +13,7 @@ public final class Product {
     @NotNull(message = "Product name cannot be null")
     private String name;
     @NotNull(message = "Price cannot be null")
-    private double price;
+    private Double price;
     private String description;
     @NotNull(message = "Category cannot be null")
     private ProductCategory category;

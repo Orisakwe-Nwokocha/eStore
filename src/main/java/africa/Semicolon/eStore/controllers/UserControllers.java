@@ -83,7 +83,7 @@ public class UserControllers {
             var result = userServices.viewCart(viewCartRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), OK);
         } catch (EstoreAppException e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), NO_CONTENT);
         }
     }
 

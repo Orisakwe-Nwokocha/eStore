@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public final class Item {
     private Product product;
-    private int quantityOfProduct;
+    private Integer quantityOfProduct;
 
     @Override
     public String toString() {

@@ -30,13 +30,14 @@ public class InventoryServicesImpl implements InventoryServices {
 
     @Override
     public AddProductResponse addProductWith(AddProductRequest addProductRequest) {
-        Product newProduct = mapAddItemResponse(addProductRequest);
+        Product newProduct = map(addProductRequest);
         inventory.save(newProduct);
         return mapAddProductResponseWith(newProduct);
     }
 
     @Override
     public FindAllProductsResponse findAllProducts() {
+        if (inventory.findAll().isEmpty()) throw new ProductNotFoundException("No products found");
         return mapGetProductsResponse(inventory.findAll());
     }
 

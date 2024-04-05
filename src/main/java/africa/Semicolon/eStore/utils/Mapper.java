@@ -60,7 +60,7 @@ public final class Mapper {
         return logoutResponse;
     }
 
-    public static Product mapAddItemResponse(AddProductRequest addProductRequest) {
+    public static Product map(AddProductRequest addProductRequest) {
         String productCategory = upperCaseValueOf(addProductRequest.getCategory());
         Product product = new Product();
         try {

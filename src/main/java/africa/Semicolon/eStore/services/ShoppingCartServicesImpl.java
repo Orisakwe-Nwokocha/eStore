@@ -6,8 +6,8 @@ import africa.Semicolon.eStore.data.models.ShoppingCart;
 import africa.Semicolon.eStore.data.models.User;
 import africa.Semicolon.eStore.dtos.requests.AddItemRequest;
 import africa.Semicolon.eStore.dtos.requests.RemoveItemRequest;
-import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 import africa.Semicolon.eStore.exceptions.ItemNotFoundException;
+import africa.Semicolon.eStore.exceptions.ShoppingCartIsEmptyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +30,16 @@ public class ShoppingCartServicesImpl implements ShoppingCartServices {
 
     @Override
     public ShoppingCart removeFromCartWith(RemoveItemRequest removeItemRequest, User user) {
-        Product product = inventoryServices.findBy(removeItemRequest.getProductId());
         ShoppingCart shoppingCart = user.getCart();
+        validate(shoppingCart);
+        Product product = inventoryServices.findBy(removeItemRequest.getProductId());
         Item foundItem = findItemBy(product, shoppingCart);
         shoppingCart.getItems().remove(foundItem);
         return shoppingCart;
+    }
+
+    private void validate(ShoppingCart cart) {
+        if (cart.getItems().isEmpty()) throw new ShoppingCartIsEmptyException("Your cart is empty");
     }
 
     private void addNewItemWith(AddItemRequest addItemRequest, ShoppingCart shoppingCart) {
