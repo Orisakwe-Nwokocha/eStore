@@ -156,6 +156,7 @@ public final class Mapper {
     }
 
     private static CardType getCardType(String creditCardNumber) {
+        if (creditCardNumber.length() < 2) throw new InvalidCardTypeException("Card type is not valid");
         char firstDigit = creditCardNumber.charAt(0);
         char secondDigit = creditCardNumber.charAt(1);
 

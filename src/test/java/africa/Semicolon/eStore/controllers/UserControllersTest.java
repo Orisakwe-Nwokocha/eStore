@@ -18,13 +18,10 @@ import static org.springframework.http.HttpStatus.*;
 
 @SpringBootTest
 public class UserControllersTest {
-
     @Autowired
     private UserControllers userControllers;
-
     @Autowired
     private Users users;
-
     @Autowired
     private Inventory inventory;
 
@@ -263,41 +260,105 @@ public class UserControllersTest {
 
     @Test
     public void testUpdateDeliveryDetails_isSuccessful_isTrue() {
+        userControllers.register(registerRequest);
+        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        assertIsSuccessful(response, true);
+        assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testUpdateDeliveryDetails_isSuccessful_isFalse() {
+        userControllers.register(registerRequest);
+        userControllers.logout(logoutRequest);
+        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        assertIsSuccessful(response, false);
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testUpdateCreditCardInfo_isSuccessful_isTrue() {
+        userControllers.register(registerRequest);
+        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        assertIsSuccessful(response, true);
+        assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testUpdateCreditCardInfo_isSuccessful_isFalse() {
+        userControllers.register(registerRequest);
+        updateCreditCardInfoRequest.setCreditCardNumber("77");
+        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        assertIsSuccessful(response, false);
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testCheckout_isSuccessful_isTrue() {
+        userControllers.register(registerRequest);
+        var addProductResponse = userControllers.addProduct(addProductRequest);
+        addItemRequest.setProductId(getProductId(addProductResponse));
+        userControllers.addToCart(addItemRequest);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+
+        var response = userControllers.checkout(checkoutRequest);
+        assertIsSuccessful(response, true);
+        assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testCheckout_isSuccessful_isFalse() {
+        userControllers.register(registerRequest);
+        var response = userControllers.checkout(checkoutRequest);
+        assertIsSuccessful(response, false);
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testViewOrder_isSuccessful_isTrue() {
+        userControllers.register(registerRequest);
+        var addProductResponse = userControllers.addProduct(addProductRequest);
+        addItemRequest.setProductId(getProductId(addProductResponse));
+        userControllers.addToCart(addItemRequest);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        var checkoutResponse = userControllers.checkout(checkoutRequest);
+
+        viewOrderRequest.setOrderId(getOrderId(checkoutResponse));
+        var response = userControllers.viewOrder(viewOrderRequest);
+        assertIsSuccessful(response, true);
+        assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testViewOrder_isSuccessful_isFalse() {
+        userControllers.register(registerRequest);
+        var response = userControllers.viewOrder(viewOrderRequest);
+        assertIsSuccessful(response, false);
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testViewAllOrders_isSuccessful_isTrue() {
+        userControllers.register(registerRequest);
+        var addProductResponse = userControllers.addProduct(addProductRequest);
+        addItemRequest.setProductId(getProductId(addProductResponse));
+        userControllers.addToCart(addItemRequest);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        userControllers.checkout(checkoutRequest);
+
+        var response = userControllers.viewAllOrders(viewAllOrdersRequest);
+        assertIsSuccessful(response, true);
+        assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testViewAllOrders_isSuccessful_isFalse() {
+        userControllers.register(registerRequest);
+        var response = userControllers.viewAllOrders(viewAllOrdersRequest);
+        assertIsSuccessful(response, false);
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
+
 }

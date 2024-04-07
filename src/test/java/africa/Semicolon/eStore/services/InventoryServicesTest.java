@@ -78,4 +78,5 @@ public class InventoryServicesTest {
             assertThat(e.getMessage(), containsString("Product not found"));
         }
     }
+
 }

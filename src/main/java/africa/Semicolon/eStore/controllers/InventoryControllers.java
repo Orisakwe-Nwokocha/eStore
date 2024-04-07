@@ -36,7 +36,7 @@ public class InventoryControllers {
             var result = inventoryServices.findAllProducts();
             return new ResponseEntity<>(new ApiResponse(true, result), OK);
         } catch (EstoreAppException e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), NO_CONTENT);
+            return new ResponseEntity<>(new ApiResponse(true, e.getMessage()), NO_CONTENT);
         }
     }
 }
