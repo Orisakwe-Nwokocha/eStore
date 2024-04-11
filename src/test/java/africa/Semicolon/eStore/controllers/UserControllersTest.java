@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
+import org.springframework.validation.SimpleErrors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -37,6 +39,8 @@ public class UserControllersTest {
     private CheckoutRequest checkoutRequest;
     private ViewOrderRequest viewOrderRequest;
     private ViewAllOrdersRequest viewAllOrdersRequest;
+    private final Object object = new Object();
+    private final Errors errors = new SimpleErrors(object);
 
     @BeforeEach
     public void setUp() {
@@ -126,237 +130,237 @@ public class UserControllersTest {
 
     @Test
     public void testRegister_isSuccessful_isTrue() {
-        var response = userControllers.register(registerRequest);
+        var response = userControllers.register(registerRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(CREATED));
     }
 
     @Test
     public void testRegister_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.register(registerRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.register(registerRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testLogin_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.login(loginRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.login(loginRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testLogin_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
+        userControllers.register(registerRequest, errors);
         loginRequest.setPassword("wrongPassword");
-        var response = userControllers.login(loginRequest);
+        var response = userControllers.login(loginRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testLogout_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.logout(logoutRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.logout(logoutRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testLogout_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
+        userControllers.register(registerRequest, errors);
         logoutRequest.setUsername("nonExistingUsername");
-        var response = userControllers.logout(logoutRequest);
+        var response = userControllers.logout(logoutRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testAddProduct_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(CREATED));
     }
 
     @Test
     public void testAddProduct_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
+        userControllers.register(registerRequest, errors);
         addProductRequest.setCategory("invalid");
-        var response = userControllers.addProduct(addProductRequest);
+        var response = userControllers.addProduct(addProductRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testAddToCart_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(response));
-        response = userControllers.addToCart(addItemRequest);
+        response = userControllers.addToCart(addItemRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testAddToCart_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(response));
         addItemRequest.setQuantityOfProduct(11);
-        response = userControllers.addToCart(addItemRequest);
+        response = userControllers.addToCart(addItemRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testRemoveFromCart_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(response));
-        userControllers.addToCart(addItemRequest);
+        userControllers.addToCart(addItemRequest, errors);
         removeItemRequest.setProductId(getProductId(response));
 
-        response = userControllers.removeFromCart(removeItemRequest);
+        response = userControllers.removeFromCart(removeItemRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testRemoveFromCart_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         removeItemRequest.setProductId(getProductId(response));
 
-        response = userControllers.removeFromCart(removeItemRequest);
+        response = userControllers.removeFromCart(removeItemRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testViewCart_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(response));
-        userControllers.addToCart(addItemRequest);
+        userControllers.addToCart(addItemRequest, errors);
 
-        response = userControllers.viewCart(viewCartRequest);
+        response = userControllers.viewCart(viewCartRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testViewCart_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(response));
 
-        response = userControllers.viewCart(viewCartRequest);
+        response = userControllers.viewCart(viewCartRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(NO_CONTENT));
     }
 
     @Test
     public void testUpdateDeliveryDetails_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testUpdateDeliveryDetails_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        userControllers.logout(logoutRequest);
-        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
+        userControllers.register(registerRequest, errors);
+        userControllers.logout(logoutRequest, errors);
+        var response = userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testUpdateCreditCardInfo_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testUpdateCreditCardInfo_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
+        userControllers.register(registerRequest, errors);
         updateCreditCardInfoRequest.setCreditCardNumber("77");
-        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        var response = userControllers.updateCreditCardInfo(updateCreditCardInfoRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testCheckout_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var addProductResponse = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var addProductResponse = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(addProductResponse));
-        userControllers.addToCart(addItemRequest);
-        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
-        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
+        userControllers.addToCart(addItemRequest, errors);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest, errors);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest, errors);
 
-        var response = userControllers.checkout(checkoutRequest);
+        var response = userControllers.checkout(checkoutRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testCheckout_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.checkout(checkoutRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.checkout(checkoutRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testViewOrder_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var addProductResponse = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var addProductResponse = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(addProductResponse));
-        userControllers.addToCart(addItemRequest);
-        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
-        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
-        var checkoutResponse = userControllers.checkout(checkoutRequest);
+        userControllers.addToCart(addItemRequest, errors);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest, errors);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest, errors);
+        var checkoutResponse = userControllers.checkout(checkoutRequest, errors);
 
         viewOrderRequest.setOrderId(getOrderId(checkoutResponse));
-        var response = userControllers.viewOrder(viewOrderRequest);
+        var response = userControllers.viewOrder(viewOrderRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testViewOrder_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.viewOrder(viewOrderRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.viewOrder(viewOrderRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test
     public void testViewAllOrders_isSuccessful_isTrue() {
-        userControllers.register(registerRequest);
-        var addProductResponse = userControllers.addProduct(addProductRequest);
+        userControllers.register(registerRequest, errors);
+        var addProductResponse = userControllers.addProduct(addProductRequest, errors);
         addItemRequest.setProductId(getProductId(addProductResponse));
-        userControllers.addToCart(addItemRequest);
-        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest);
-        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest);
-        userControllers.checkout(checkoutRequest);
+        userControllers.addToCart(addItemRequest, errors);
+        userControllers.updateDeliveryDetails(updateDeliveryDetailsRequest, errors);
+        userControllers.updateCreditCardInfo(updateCreditCardInfoRequest, errors);
+        userControllers.checkout(checkoutRequest, errors);
 
-        var response = userControllers.viewAllOrders(viewAllOrdersRequest);
+        var response = userControllers.viewAllOrders(viewAllOrdersRequest, errors);
         assertIsSuccessful(response, true);
         assertThat(response.getStatusCode(), is(OK));
     }
 
     @Test
     public void testViewAllOrders_isSuccessful_isFalse() {
-        userControllers.register(registerRequest);
-        var response = userControllers.viewAllOrders(viewAllOrdersRequest);
+        userControllers.register(registerRequest, errors);
+        var response = userControllers.viewAllOrders(viewAllOrdersRequest, errors);
         assertIsSuccessful(response, false);
         assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
