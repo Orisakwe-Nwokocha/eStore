@@ -12,4 +12,4 @@ Welcome to a new era of online shopping convenience!
 The application provides several RESTful APIs for interacting with the store. Here are some examples:
 
 # API Documentation
-Detailed API documentation is available on Postman. You can access it here: https://documenter.getpostman.com/view/33764605/2sA3BgBFzN
+Detailed API documentation is available on Postman. You can access it here: https://documenter.getpostman.com/view/33764605/2sA3BhfvET
