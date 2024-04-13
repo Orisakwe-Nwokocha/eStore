@@ -72,7 +72,7 @@ public final class Mapper {
         catch (IllegalArgumentException e) {
             throw new InvalidArgumentException("Product category is not valid");
         }
-        product.setName(addProductRequest.getName());
+        product.setName(addProductRequest.getProductName());
         product.setDescription(addProductRequest.getDescription());
         product.setPrice(addProductRequest.getPrice());
         product.setQuantity(addProductRequest.getQuantity());
@@ -80,14 +80,27 @@ public final class Mapper {
     }
 
     public static AddProductResponse mapAddProductResponseWith(Product product) {
+        String price = String.format("₦%,.2f", product.getPrice());
         AddProductResponse addProductResponse = new AddProductResponse();
         addProductResponse.setProductId(product.getId());
         addProductResponse.setProductName(product.getName());
         addProductResponse.setCategory(product.getCategory().toString());
-        addProductResponse.setPrice(product.getPrice());
+        addProductResponse.setPrice(price);
         addProductResponse.setQuantity(product.getQuantity());
         addProductResponse.setDescription(product.getDescription());
         return addProductResponse;
+    }
+
+    public static RemoveProductResponse mapRemoveProductResponse(String productId) {
+        RemoveProductResponse removeProductResponse = new RemoveProductResponse();
+        removeProductResponse.setProductId(productId);
+        return removeProductResponse;
+    }
+
+    public static FindProductResponse mapFindProductResponse(Product foundProduct) {
+        FindProductResponse findProductResponse = new FindProductResponse();
+        findProductResponse.setProduct(String.valueOf(foundProduct));
+        return findProductResponse;
     }
 
     public static FindAllProductsResponse mapGetProductsResponse(List<Product> allProducts) {
@@ -96,30 +109,24 @@ public final class Mapper {
         return getProductsResponse;
     }
 
-    public static FindProductResponse mapFindProductResponse(Product foundProduct) {
-        FindProductResponse findProductResponse = new FindProductResponse();
-        findProductResponse.setProduct(foundProduct.getDescription());
-        return findProductResponse;
-    }
-
     public static AddItemResponse mapAddItemResponse(User user) {
         AddItemResponse addItemResponse = new AddItemResponse();
         addItemResponse.setUsername(user.getUsername());
-        addItemResponse.setShoppingCart(user.getCart().toString());
+        addItemResponse.setShoppingCart(user.getCart());
         return addItemResponse;
     }
 
     public static RemoveItemResponse mapRemoveItemResponse(User user) {
         RemoveItemResponse removeItemResponse = new RemoveItemResponse();
         removeItemResponse.setUsername(user.getUsername());
-        removeItemResponse.setShoppingCart(user.getCart().toString());
+        removeItemResponse.setShoppingCart(user.getCart());
         return removeItemResponse;
     }
 
     public static ViewCartResponse mapViewCartResponse(User user) {
         ViewCartResponse viewCartResponse = new ViewCartResponse();
         viewCartResponse.setUsername(user.getUsername());
-        viewCartResponse.setShoppingCart(user.getCart().toString());
+        viewCartResponse.setShoppingCart(user.getCart());
         return viewCartResponse;
     }
 

@@ -24,7 +24,7 @@ public final class Product {
     @Override
     public String toString() {
         String asterisk = "*".repeat(20);
-        String format = "%s%n%s%n%s%n%s%n₦%,.2f%n%s";
+        String format = "%s\n%s\n%s\n%s\n₦%,.2f\n%s";
         return String.format(format, asterisk, name, description, category, price, asterisk);
     }
 

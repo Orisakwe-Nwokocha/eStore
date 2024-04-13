@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -39,12 +38,12 @@ public class InventoryControllers {
             var result = inventoryServices.findAllProducts();
             return new ResponseEntity<>(new ApiResponse(true, result), OK);
         } catch (EstoreAppException e) {
-            return new ResponseEntity<>(new ApiResponse(true, e.getMessage()), NO_CONTENT);
+            return new ResponseEntity<>(new ApiResponse(true, e.getMessage()), BAD_REQUEST);
         }
     }
 
     private static ResponseEntity<String> getValidationErrorMessageOf(Errors errors) {
-        return new ResponseEntity<>(String.format("Operation failed: %s is null",
-                requireNonNull(errors.getFieldError()).getField()), BAD_REQUEST);
+        String defaultMessage = errors.getAllErrors().getFirst().getDefaultMessage();
+        return new ResponseEntity<>(String.format("Operation failed: %s", defaultMessage), BAD_REQUEST);
     }
 }

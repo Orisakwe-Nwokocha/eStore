@@ -39,7 +39,7 @@ public class InventoryServicesTest {
 
         addProductRequest = new AddProductRequest();
         addProductRequest.setUsername("username");
-        addProductRequest.setName("pixel 6");
+        addProductRequest.setProductName("pixel 6");
         addProductRequest.setDescription("smartphone");
         addProductRequest.setQuantity(10);
         addProductRequest.setCategory("electronics");

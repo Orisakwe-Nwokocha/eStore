@@ -5,9 +5,11 @@ import africa.Semicolon.eStore.data.models.Product;
 import africa.Semicolon.eStore.data.repositories.Inventory;
 import africa.Semicolon.eStore.dto.requests.AddProductRequest;
 import africa.Semicolon.eStore.dto.requests.FindProductRequest;
+import africa.Semicolon.eStore.dto.requests.RemoveProductRequest;
 import africa.Semicolon.eStore.dto.responses.AddProductResponse;
 import africa.Semicolon.eStore.dto.responses.FindAllProductsResponse;
 import africa.Semicolon.eStore.dto.responses.FindProductResponse;
+import africa.Semicolon.eStore.dto.responses.RemoveProductResponse;
 import africa.Semicolon.eStore.exceptions.IllegalProductStateException;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 import africa.Semicolon.eStore.exceptions.ProductNotFoundException;
@@ -34,6 +36,13 @@ public class InventoryServicesImpl implements InventoryServices {
         Product newProduct = map(addProductRequest);
         inventory.save(newProduct);
         return mapAddProductResponseWith(newProduct);
+    }
+
+    @Override
+    public RemoveProductResponse removeProductWith(RemoveProductRequest removeProductRequest) {
+        Product product = findBy(removeProductRequest.getProductId());
+        inventory.delete(product);
+        return mapRemoveProductResponse(removeProductRequest.getProductId());
     }
 
     @Override

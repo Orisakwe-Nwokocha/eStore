@@ -1,7 +1,7 @@
 package africa.Semicolon.eStore.controllers;
 
 import africa.Semicolon.eStore.dto.requests.*;
-import africa.Semicolon.eStore.dto.responses.*;
+import africa.Semicolon.eStore.dto.responses.ApiResponse;
 import africa.Semicolon.eStore.exceptions.EstoreAppException;
 import africa.Semicolon.eStore.services.UserServices;
 import jakarta.validation.Valid;
@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
@@ -63,6 +62,17 @@ public class UserControllers {
         }
     }
 
+    @DeleteMapping("/remove-product")
+    public ResponseEntity<?> removeProduct(@Valid @RequestBody RemoveProductRequest removeProductRequest, Errors errors) {
+        if (errors.hasErrors()) return getValidationErrorMessageOf(errors);
+        try {
+            var result = userServices.removeProduct(removeProductRequest);
+            return new ResponseEntity<>(new ApiResponse(true, result), OK);
+        } catch (EstoreAppException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
+        }
+    }
+
     @PatchMapping("/add-to-cart")
     public ResponseEntity<?> addToCart(@Valid @RequestBody AddItemRequest addItemRequest, Errors errors) {
         if (errors.hasErrors()) return getValidationErrorMessageOf(errors);
@@ -92,7 +102,7 @@ public class UserControllers {
             var result = userServices.viewCart(viewCartRequest);
             return new ResponseEntity<>(new ApiResponse(true, result), OK);
         } catch (EstoreAppException e) {
-            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), NO_CONTENT);
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), BAD_REQUEST);
         }
     }
 
@@ -152,7 +162,7 @@ public class UserControllers {
     }
 
     private static ResponseEntity<String> getValidationErrorMessageOf(Errors errors) {
-        return new ResponseEntity<>(String.format("Operation failed: %s is null",
-                requireNonNull(errors.getFieldError()).getField()), BAD_REQUEST);
+        String defaultMessage = errors.getAllErrors().getFirst().getDefaultMessage();
+        return new ResponseEntity<>(String.format("Operation failed: %s", defaultMessage), BAD_REQUEST);
     }
 }

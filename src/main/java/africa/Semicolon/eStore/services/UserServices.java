@@ -8,6 +8,7 @@ public interface UserServices {
     LoginResponse login(LoginRequest loginRequest);
     LogoutResponse logout(LogoutRequest logOutRequest);
     AddProductResponse addProduct(AddProductRequest addProductRequest);
+    RemoveProductResponse removeProduct(RemoveProductRequest removeProductRequest);
     AddItemResponse addToCart(AddItemRequest addItemRequest);
     RemoveItemResponse removeFromCart(RemoveItemRequest removeItemRequest);
     ViewCartResponse viewCart(ViewCartRequest viewCartRequest);

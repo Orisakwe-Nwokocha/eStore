@@ -48,7 +48,7 @@ public class UserServicesTest {
 
         addProductRequest = new AddProductRequest();
         addProductRequest.setUsername("username2");
-        addProductRequest.setName("pixel 6");
+        addProductRequest.setProductName("pixel 6");
         addProductRequest.setDescription("smartphone");
         addProductRequest.setQuantity(10);
         addProductRequest.setCategory("electronics");
@@ -358,7 +358,7 @@ public class UserServicesTest {
         assertThat(user.getOrders(), hasSize(1));
 
         userServices.addToCart(addItemRequest);
-        addProductRequest.setName("jacket");
+        addProductRequest.setProductName("jacket");
         addProductRequest.setDescription("hoodie");
         addProductRequest.setCategory("clothing");
         addProductRequest.setQuantity(20);

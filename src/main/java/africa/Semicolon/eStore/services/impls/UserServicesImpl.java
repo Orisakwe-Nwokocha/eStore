@@ -57,10 +57,18 @@ public class UserServicesImpl implements UserServices {
 
     @Override
     public AddProductResponse addProduct(AddProductRequest addProductRequest) {
-        User foundUser = findUserBy(addProductRequest.getUsername());
-        validateLoginStatusOf(foundUser);
-        validate(foundUser);
+        String username = addProductRequest.getUsername();
+        validate(username);
         return inventoryServices.addProductWith(addProductRequest);
+    }
+
+
+
+    @Override
+    public RemoveProductResponse removeProduct(RemoveProductRequest removeProductRequest) {
+        String username = removeProductRequest.getUsername();
+        validate(username);
+        return inventoryServices.removeProductWith(removeProductRequest);
     }
 
     @Override
@@ -138,10 +146,17 @@ public class UserServicesImpl implements UserServices {
         return mapViewAllOrdersResponse(foundUser.getOrders());
     }
 
+
     private Order findOrderBy(String orderId, List<Order> orders) {
         return orders.stream()
                 .filter(order -> order.getId().equals(orderId))
                 .findFirst().orElseThrow(()-> new OrderNotFoundException("Order not found"));
+    }
+
+    private void validate(String username) {
+        User foundUser = findUserBy(username);
+        validateLoginStatusOf(foundUser);
+        validate(foundUser);
     }
 
     private void validate(User user) {
@@ -160,21 +175,9 @@ public class UserServicesImpl implements UserServices {
         return foundUser;
     }
 
-    private void validateUniqueUsername(RegisterRequest registerRequest) {
+    private void validate(RegisterRequest registerRequest) {
         String username = lowerCaseValueOf(registerRequest.getUsername());
         boolean userExists = users.existsByUsername(username);
         if (userExists) throw new UserExistsException(String.format("%s already exists", username));
-    }
-
-    private void validateBlank(RegisterRequest registerRequest) {
-        boolean isBlank = registerRequest.getUsername().isBlank()
-                || registerRequest.getPassword().isBlank()
-                || registerRequest.getRole().isBlank();
-        if (isBlank) throw new InvalidArgumentException("Registration details cannot be blank");
-    }
-
-    private void validate(RegisterRequest registerRequest) {
-        validateBlank(registerRequest);
-        validateUniqueUsername(registerRequest);
     }
 }

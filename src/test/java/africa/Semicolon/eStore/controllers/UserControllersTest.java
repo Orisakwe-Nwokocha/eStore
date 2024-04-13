@@ -61,7 +61,7 @@ public class UserControllersTest {
 
         addProductRequest = new AddProductRequest();
         addProductRequest.setUsername("username");
-        addProductRequest.setName("pixel 6");
+        addProductRequest.setProductName("pixel 6");
         addProductRequest.setDescription("smartphone");
         addProductRequest.setQuantity(10);
         addProductRequest.setCategory("electronics");
@@ -259,7 +259,7 @@ public class UserControllersTest {
 
         response = userControllers.viewCart(viewCartRequest, errors);
         assertIsSuccessful(response, false);
-        assertThat(response.getStatusCode(), is(NO_CONTENT));
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 
     @Test

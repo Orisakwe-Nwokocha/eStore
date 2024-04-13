@@ -48,7 +48,7 @@ public class InventoryControllersTest {
 
         addProductRequest = new AddProductRequest();
         addProductRequest.setUsername("username");
-        addProductRequest.setName("pixel 6");
+        addProductRequest.setProductName("pixel 6");
         addProductRequest.setDescription("smartphone");
         addProductRequest.setQuantity(10);
         addProductRequest.setCategory("electronics");
@@ -101,10 +101,10 @@ public class InventoryControllersTest {
     }
 
     @Test
-    public void testFindAllProducts_isSuccessful_isFalse() {
+    public void testFindAllProducts_isSuccessful_isTrue_BadRequest() {
         userControllers.register(registerRequest, errors);
         var response = inventoryControllers.findAllProducts();
         assertIsSuccessful(response, true);
-        assertThat(response.getStatusCode(), is(NO_CONTENT));
+        assertThat(response.getStatusCode(), is(BAD_REQUEST));
     }
 }
