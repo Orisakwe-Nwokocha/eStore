@@ -3,6 +3,7 @@ package africa.Semicolon.eStore.data.models;
 import africa.Semicolon.eStore.data.constants.Role;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,8 +27,10 @@ public class User {
     @NotNull(message = "Please select a role")
     private Role role;
     private boolean isLoggedIn = true;
+    @Lazy
     private ShoppingCart cart = new ShoppingCart();
-    private BillingInformation BillingInformation = new BillingInformation();
-    @DBRef
+    private BillingInformation billingInformation = new BillingInformation();
+    @Lazy
+    @DBRef(lazy = true)
     private List<Order> orders = new ArrayList<>();
 }

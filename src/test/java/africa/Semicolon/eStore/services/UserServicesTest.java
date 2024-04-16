@@ -338,8 +338,8 @@ public class UserServicesTest {
 
         viewOrderRequest.setOrderId(checkoutResponse.getOrderId());
         var viewOrderResponse = userServices.viewOrder(viewOrderRequest);
-        System.out.println(viewOrderResponse.getOrder());
-        assertThat(viewOrderResponse.getOrder(), notNullValue());
+        System.out.println(viewOrderResponse);
+        assertThat(viewOrderResponse.getOrderId(), notNullValue());
     }
 
     @Test

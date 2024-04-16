@@ -41,7 +41,7 @@ public class UserServicesImpl implements UserServices {
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         User foundUser = findUserBy(loginRequest.getUsername());
-        if (!isMatches(loginRequest, foundUser)) throw new IncorrectPasswordException("Password is not correct");
+        if (!isMatches(loginRequest, foundUser)) throw new IncorrectPasswordException("Username or password is not correct");
         foundUser.setLoggedIn(true);
         User savedUser = users.save(foundUser);
         return mapLoginResponseWith(savedUser);

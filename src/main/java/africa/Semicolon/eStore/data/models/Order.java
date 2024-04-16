@@ -1,22 +1,25 @@
 package africa.Semicolon.eStore.data.models;
 
 import lombok.Data;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Data
 @Document("Orders")
 public final class Order {
     @Id
     private String id;
-    @DBRef
+    @Lazy
+    @DBRef(lazy = true)
     private User buyer;
     private Integer numberOfItems;
-    private String items;
+    private List<Item> items;
     private Double totalPrice;
     private LocalDateTime dateOfOrder = LocalDateTime.now();
 

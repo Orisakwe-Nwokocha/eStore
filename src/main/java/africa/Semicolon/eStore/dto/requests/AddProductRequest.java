@@ -17,6 +17,8 @@ public final class AddProductRequest {
     private double price;
     @NotNull(message = "Category cannot be null")
     private String category;
+    @NotNull(message = "Category cannot be null")
+    @NotBlank(message = "Category cannot be blank")
     private String description;
     @NotNull(message = "Quantity cannot be null")
     @Min(value = 1, message = "Quantity must be greater than or equal to 1")

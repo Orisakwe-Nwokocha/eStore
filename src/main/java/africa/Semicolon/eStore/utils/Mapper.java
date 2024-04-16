@@ -12,6 +12,7 @@ import africa.Semicolon.eStore.dto.responses.*;
 import africa.Semicolon.eStore.exceptions.InvalidArgumentException;
 import africa.Semicolon.eStore.exceptions.InvalidCardTypeException;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static africa.Semicolon.eStore.data.constants.CardType.*;
@@ -186,7 +187,7 @@ public final class Mapper {
         Order order = new Order();
         order.setBuyer(buyer);
         order.setNumberOfItems(buyer.getCart().getItems().size());
-        order.setItems(buyer.getCart().getItems().toString());
+        order.setItems(buyer.getCart().getItems());
         order.setTotalPrice(totalPrice);
         return order;
     }
@@ -201,14 +202,33 @@ public final class Mapper {
     public static ViewOrderResponse mapViewOrderResponse(Order order) {
         ViewOrderResponse viewOrderResponse = new ViewOrderResponse();
         viewOrderResponse.setUsername(order.getBuyer().getUsername());
-        viewOrderResponse.setOrder(order.toString());
+        viewOrderResponse.setOrderId(order.getId());
+        viewOrderResponse.setNumberOfItems(order.getNumberOfItems());
+        String totalPrice = String.format("₦%,.2f", order.getTotalPrice());
+        viewOrderResponse.setTotalPrice(totalPrice);
+        String dateOrdered = order.getDateOfOrder().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy 'at' hh:mm:ss a"));
+        viewOrderResponse.setDateOfOrder(dateOrdered);
+        order.getItems().forEach(item -> {
+            GetItemResponse itemResponse = new GetItemResponse();
+            itemResponse.setProductId(item.getProduct().getId());
+            itemResponse.setProductName(item.getProduct().getName());
+            itemResponse.setCategory(item.getProduct().getCategory().toString());
+            itemResponse.setDescription(item.getProduct().getDescription());
+            String price = String.format("₦%,.2f", item.getProduct().getPrice());
+            itemResponse.setPrice(price);
+            itemResponse.setQuantityOfProduct(item.getQuantityOfProduct());
+            viewOrderResponse.getItems().add(itemResponse);
+        });
         return viewOrderResponse;
     }
 
     public static ViewAllOrdersResponse mapViewAllOrdersResponse(List<Order> orders) {
         ViewAllOrdersResponse viewAllOrdersResponse = new ViewAllOrdersResponse();
         viewAllOrdersResponse.setUsername(orders.getFirst().getBuyer().getUsername());
-        viewAllOrdersResponse.setOrders(orders.toString());
+        orders.forEach(order -> {
+            ViewOrderResponse viewOrderResponse = mapViewOrderResponse(order);
+            viewAllOrdersResponse.getOrders().add(viewOrderResponse);
+        });
         return viewAllOrdersResponse;
     }
 }
